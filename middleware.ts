@@ -2,17 +2,17 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    // Protejăm ruta /admin
     if (request.nextUrl.pathname.startsWith('/admin')) {
-
         const basicAuth = request.headers.get('authorization');
 
         if (basicAuth) {
             const authValue = basicAuth.split(' ')[1];
             const [user, pwd] = atob(authValue).split(':');
 
-            // SCHIMBĂ user și parolă cu ceva ce știi doar tu!
-            if (user === 'mosul' && pwd === 'craciun2024') {
+            const validUser = process.env.ADMIN_USER;
+            const validPass = process.env.ADMIN_PASSWORD;
+
+            if (user === validUser && pwd === validPass) {
                 return NextResponse.next();
             }
         }
