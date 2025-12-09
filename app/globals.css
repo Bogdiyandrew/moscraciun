@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-border: var(--border);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* --- LIGHT MODE (ZI) --- */
+  --background: #ffffff;
+  /* Alb pur pentru curățenie maximă */
+  --foreground: #09090b;
+  /* Zinc 950 */
+
+  --card: #f4f4f5;
+  /* Zinc 100 - Puțin gri pentru separare */
+  --card-foreground: #09090b;
+
+  --primary: #dc2626;
+  /* Roșu Crăciun */
+  --primary-foreground: #ffffff;
+
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  /* Zinc 500 */
+
+  --border: #e4e4e7;
+  /* Zinc 200 */
+}
+
+.dark {
+  /* --- DARK MODE (NOAPTE - Varianta Neutră) --- */
+  --background: #09090b;
+  /* Zinc 950 (Negru neutru) */
+  --foreground: #fafafa;
+  /* Zinc 50 */
+
+  --card: #18181b;
+  /* Zinc 900 */
+  --card-foreground: #fafafa;
+
+  --primary: #dc2626;
+  --primary-foreground: #ffffff;
+
+  --muted: #27272a;
+  /* Zinc 800 */
+  --muted-foreground: #a1a1aa;
+  /* Zinc 400 */
+
+  --border: #27272a;
+  /* Zinc 800 */
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

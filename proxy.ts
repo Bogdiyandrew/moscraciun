@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+// 1. Schimbă numele funcției din "middleware" în "proxy"
+export function proxy(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith('/admin')) {
         const basicAuth = request.headers.get('authorization');
 
@@ -28,6 +29,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
+// Config-ul rămâne la fel
 export const config = {
     matcher: '/admin/:path*',
 };
