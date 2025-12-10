@@ -27,8 +27,13 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
 
         try {
             for (const file of files) {
-                // Generăm un nume unic: data-random-nume.jpg
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${file.name}`;
+                // --- MODIFICAREA ESTE AICI ---
+                // 1. Curățăm numele fișierului de spații și caractere speciale (le înlocuim cu "_")
+                const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+
+                // 2. Generăm numele final unic
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${cleanName}`;
+                // -----------------------------
 
                 // Upload în Supabase Storage (bucket-ul 'client-uploads')
                 const { data, error } = await supabase.storage
@@ -47,9 +52,10 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
 
             const updatedList = [...previewUrls, ...newUrls];
             setPreviewUrls(updatedList);
-            onUploadComplete(updatedList); // Trimitem lista de URL-uri părintelui (OrderForm)
+            onUploadComplete(updatedList);
 
         } catch (error: any) {
+            console.error(error); // E bine să vezi eroarea și în consolă
             alert('Eroare la upload: ' + error.message);
         } finally {
             setUploading(false);
