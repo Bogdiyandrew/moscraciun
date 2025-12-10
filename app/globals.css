@@ -14,6 +14,8 @@
   --color-muted-foreground: var(--muted-foreground);
 
   --color-border: var(--border);
+
+  --font-craciun: var(--font-craciun), sans-serif;
 }
 
 :root {

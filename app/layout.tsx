@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
-import Footer from "./components/Footer"; // Asigură-te că e importat
+import Footer from "./components/Footer";
 import { ThemeProvider } from "./components/ThemeProvider";
+import localFont from "next/font/local";
+import WinterLoader from './components/WinterLoader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,10 +17,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const myCustomFont = localFont({
+  src: "./fonts/PWHappyChristmas.ttf", // Calea către fișier (relativă la layout.tsx)
+  variable: "--font-craciun",       // Numele variabilei CSS pentru Tailwind
+  weight: "100 900",               // Specifică greutățile disponibile (sau o singură valoare gen "400")
+});
+
 export const metadata: Metadata = {
   title: "Biroul lui Moș Crăciun - Mesaje Video Personalizate",
   description: "Comandă un mesaj video magic pentru copilul tău, direct de la Polul Nord.",
 };
+
+import { LoadingProvider } from "./context/LoadingContext";
 
 export default function RootLayout({
   children,
@@ -27,35 +37,36 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ro" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <div className="flex min-h-screen flex-col md:flex-row">
+      <body className={`${geistSans.variable} ${geistMono.variable} ${myCustomFont.variable} antialiased bg-background text-foreground`}>
+        <LoadingProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* 1. Loader-ul trebuie să fie AICI, în interiorul ThemeProvider, ca să ia culorile corecte */}
+            <WinterLoader />
 
-            {/* Sidebar-ul (Stânga) */}
-            <Navigation />
+            <div className="flex min-h-screen">
 
-            {/* Zona Principală (Dreapta) */}
-            {/* Clasa md:pl-64 este CRITICĂ. Ea împinge tot conținutul la dreapta pe desktop */}
-            <main className="flex-1 w-full md:pl-64 transition-all duration-300 flex flex-col min-h-screen relative">
+              {/* Sidebar-ul (Stânga) */}
+              <Navigation />
 
-              {/* Conținutul Paginii */}
-              <div className="flex-1">
+              {/* Zona Principală (Dreapta) */}
+              <main className="flex-1 md:ml-64 relative">
+
+                {/* Conținutul Paginii */}
                 {children}
-              </div>
 
-              {/* --- AICI TREBUIE SĂ FIE FOOTER-UL --- */}
-              {/* Fiind în interiorul main-ului cu md:pl-64, nu va mai fi acoperit de meniu */}
-              <Footer />
+                {/* Footer-ul */}
+                <Footer />
 
-            </main>
+              </main>
 
-          </div>
-        </ThemeProvider>
+            </div>
+          </ThemeProvider>
+        </LoadingProvider>
       </body>
     </html>
   );

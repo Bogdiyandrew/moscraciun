@@ -25,7 +25,7 @@ export default function FAQ() {
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
-                        <HelpCircle className="text-primary" /> Întrebări Frecvente
+                        <HelpCircle className="text-primary" /> Întrebări frecvente
                     </h2>
                 </div>
 

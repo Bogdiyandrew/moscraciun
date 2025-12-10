@@ -1,12 +1,19 @@
 'use client';
 import { Gift, Heart, Facebook, Instagram, Mail } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="w-full border-t border-border mt-auto pt-16 pb-8">
+        <motion.footer
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="w-full border-t border-border mt-auto pt-16 pb-8"
+        >
             <div className="max-w-7xl mx-auto px-6">
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -95,6 +102,6 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-        </footer>
+        </motion.footer>
     );
 }
