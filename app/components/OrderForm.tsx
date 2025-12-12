@@ -5,7 +5,6 @@ import { supabase } from '@/utils/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     User,
-    Gift,
     Sparkles,
     ThumbsUp,
     ThumbsDown,
@@ -17,11 +16,13 @@ import {
     Loader2,
     Star,
     Camera,
-    FileText
+    FileText,
+    AlertCircle,
+    X
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
-// --- TIPURI DATE ---
+
 type FormData = {
     child_name: string;
     age: string;
@@ -54,17 +55,19 @@ export default function OrderForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    // --- HANDLERS ---
+
+    const [validationError, setValidationError] = useState<string | null>(null);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        if (validationError) setValidationError(null);
     };
 
     const handleNext = () => {
-        // Validare sumară pentru pasul 1
         if (step === 1) {
             if (!formData.child_name || !formData.age || !formData.good_deed) {
-                alert("Te rugăm să completezi numele, vârsta și fapta bună!");
+                setValidationError("Hopa! Spiridușii au nevoie de Nume, Vârstă și Fapta Bună pentru a începe dosarul!");
                 return;
             }
             setStep(1.5);
@@ -86,6 +89,12 @@ export default function OrderForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!formData.parent_email) {
+            setValidationError("Avem nevoie de adresa ta de email pentru a trimite videoclipul!");
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
@@ -98,7 +107,7 @@ export default function OrderForm() {
             setIsSuccess(true);
         } catch (error: any) {
             console.error('Eroare Supabase:', error);
-            alert('Eroare la salvare: ' + error.message);
+            setValidationError('Eroare la salvare: ' + error.message);
         } finally {
             setIsSubmitting(false);
         }
@@ -139,11 +148,55 @@ export default function OrderForm() {
         >
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
 
+
+            <AnimatePresence>
+                {validationError && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm rounded-3xl"
+                        onClick={() => setValidationError(null)}
+                    >
+                        <motion.div
+                            initial={{ x: -10 }}
+                            animate={{ x: [0, -10, 10, -10, 10, 0] }}
+                            transition={{ duration: 0.4 }}
+                            className="bg-card border-2 border-red-500 rounded-2xl p-6 max-w-sm w-full shadow-2xl relative"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => setValidationError(null)}
+                                className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+
+                            <div className="flex flex-col items-center text-center gap-3">
+                                <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                                    <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-500" />
+                                </div>
+                                <h3 className="text-lg font-bold text-foreground">Atenție! 🎅</h3>
+                                <p className="text-sm text-muted-foreground">
+                                    {validationError}
+                                </p>
+                                <button
+                                    onClick={() => setValidationError(null)}
+                                    className="mt-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl transition-colors shadow-lg shadow-red-500/20 active:scale-95 cursor-pointer"
+                                >
+                                    Am înțeles, completez acum!
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-foreground">
-                        {step === 1 && 'Pasul 1: Despre Copil'}
-                        {step === 1.5 && 'Pasul 2: Magie Vizuală'}
+                        {step === 1 && 'Pasul 1: Despre copil'}
+                        {step === 1.5 && 'Pasul 2: Magie vizuală'}
                         {step === 2 && 'Pasul 3: Livrare'}
                     </h2>
                     <span className="text-sm font-medium text-muted-foreground">
@@ -185,7 +238,7 @@ export default function OrderForm() {
                                             value={formData.child_name}
                                             onChange={handleChange}
                                             placeholder="ex: Andrei"
-                                            className="w-full bg-background border border-input rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
+                                            className={`w-full bg-background border rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none transition-colors placeholder:text-muted-foreground/50 ${!formData.child_name && validationError ? 'border-red-500' : 'border-input focus:border-primary'}`}
                                         />
                                     </div>
                                 </div>
@@ -199,7 +252,7 @@ export default function OrderForm() {
                                             value={formData.age}
                                             onChange={handleChange}
                                             placeholder="ex: 5 ani"
-                                            className="w-full bg-background border border-input rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
+                                            className={`w-full bg-background border rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none transition-colors placeholder:text-muted-foreground/50 ${!formData.age && validationError ? 'border-red-500' : 'border-input focus:border-primary'}`}
                                         />
                                     </div>
                                 </div>
@@ -215,7 +268,7 @@ export default function OrderForm() {
                                         onChange={handleChange}
                                         rows={2}
                                         placeholder="ex: A învățat să citească singur"
-                                        className="w-full bg-background border border-input rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none focus:border-primary transition-colors resize-none placeholder:text-muted-foreground/50"
+                                        className={`w-full bg-background border rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none transition-colors resize-none placeholder:text-muted-foreground/50 ${!formData.good_deed && validationError ? 'border-red-500' : 'border-input focus:border-primary'}`}
                                     />
                                 </div>
                             </div>
@@ -264,7 +317,7 @@ export default function OrderForm() {
                                 <button
                                     type="button"
                                     onClick={handleNext}
-                                    className="w-full bg-foreground text-background font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-foreground/90 transition-colors shadow-md"
+                                    className="w-full bg-foreground text-background font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-foreground/90 transition-colors shadow-md cursor-pointer"
                                 >
                                     Continuă <ArrowRight className="w-5 h-5" />
                                 </button>
@@ -361,7 +414,7 @@ export default function OrderForm() {
                                             onChange={handleChange}
                                             required
                                             placeholder="email@exemplu.ro"
-                                            className="w-full bg-background border border-input rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
+                                            className={`w-full bg-background border rounded-xl py-3 pl-10 pr-4 text-foreground focus:outline-none transition-colors placeholder:text-muted-foreground/50 ${!formData.parent_email && validationError ? 'border-red-500' : 'border-input focus:border-primary'}`}
                                         />
                                     </div>
                                 </div>

@@ -6,21 +6,21 @@ export default function Story() {
     const features = [
         {
             icon: <Video className="w-8 h-8 text-blue-500" />,
-            title: "Dovada Video",
+            title: "Dovada video",
             text: "Scrisorile vechi se pierd. Copiii moderni caută dovezi. Oferim singura dovadă pe care un copil digital o înțelege: Moșul vorbindu-i direct, pe ecran.",
             color: "from-blue-500/20 to-blue-500/5",
             border: "group-hover:border-blue-500/50"
         },
         {
             icon: <UserCheck className="w-8 h-8 text-red-500" />,
-            title: "100% Uman",
+            title: "100% uman",
             text: "Fără roboți, fără AI generativ rece. Suntem o echipă de oameni reali care editează fiecare zâmbet. Tehnologia doar amplifică emoția, nu o înlocuiește.",
             color: "from-red-500/20 to-red-500/5",
             border: "group-hover:border-red-500/50"
         },
         {
             icon: <Fingerprint className="w-8 h-8 text-amber-500" />,
-            title: "Amintire Eternă",
+            title: "Amintire eternă",
             text: "Nu livrăm un simplu fișier MP4. Livrăm momentul acela de uimire pură din dimineața de Crăciun, pe care îl vei păstra în cloud și în suflet pentru totdeauna.",
             color: "from-amber-500/20 to-amber-500/5",
             border: "group-hover:border-amber-500/50"

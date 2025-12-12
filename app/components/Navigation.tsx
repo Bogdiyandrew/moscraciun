@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles } from 'lucide-react';
+import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles, SendHorizontal } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
@@ -144,8 +144,8 @@ export default function Navigation() {
                         "
                     >
                         <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-linear-to-r from-transparent to-white opacity-20 hover:animate-shine" />
-                        <Send className="w-4 h-4 relative z-10" />
-                        <span className="relative z-10">Comandă Video</span>
+                        <SendHorizontal className="w-4 h-4 relative z-10" />
+                        <span className="relative z-10">Comandă video</span>
                     </motion.button>
                 </motion.div>
             </motion.aside>
@@ -241,7 +241,7 @@ export default function Navigation() {
                                     whileTap={{ scale: 0.95 }}
                                     className="bg-primary text-white py-4 rounded-xl font-bold text-center mt-2 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 cursor-pointer"
                                 >
-                                    <Send className="w-5 h-5" /> Comandă Mesaj Video
+                                    <Send className="w-5 h-5" /> Comandă mesaj video
                                 </motion.button>
                             </div>
                         </motion.div>

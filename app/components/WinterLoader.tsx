@@ -24,7 +24,6 @@ export default function WinterLoader() {
             setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
         }, 800);
 
-        // Am redus puțin timpul total pentru a nu ține utilizatorul prea mult
         const closeTimer = setTimeout(() => {
             setIsLoading(false);
         }, 3000);
@@ -41,16 +40,12 @@ export default function WinterLoader() {
                 <motion.div
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }} // Durata mai scurta la iesire pentru snappiness
-                    // OPTIMIZARE: Am scos backdrop-blur-3xl si /95 opacity. 
-                    // Fundalul solid e mult mai rapid pe mobil.
+                    transition={{ duration: 0.5 }}
                     className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background"
                 >
-                    {/* OPTIMIZARE: Redus blur-ul si folosit opacity simplu */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[60px] pointer-events-none" />
 
                     <div className="relative mb-10">
-                        {/* OPTIMIZARE: Am simplificat animatia de pulsare */}
                         <motion.div
                             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -59,7 +54,7 @@ export default function WinterLoader() {
 
                         <motion.div
                             animate={{
-                                rotate: [0, -5, 5, -5, 5, 0], // Rotatie mai mica, mai putin efort
+                                rotate: [0, -5, 5, -5, 5, 0],
                                 scale: [1, 1.05, 1]
                             }}
                             transition={{
@@ -74,7 +69,7 @@ export default function WinterLoader() {
 
                         <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }} // Rotatie mai lenta
+                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                             className="absolute -top-6 -right-6 text-blue-400 z-20"
                         >
                             <Snowflake className="w-8 h-8 fill-blue-400/20" />
@@ -96,7 +91,6 @@ export default function WinterLoader() {
                         </AnimatePresence>
                     </div>
 
-                    {/* OPTIMIZARE: Bara de progres simplificata fara efectul de blur-shine in miscare */}
                     <div className="mt-8 w-64 h-2 bg-muted rounded-full overflow-hidden relative border border-white/5">
                         <motion.div
                             className="absolute inset-y-0 left-0 bg-primary rounded-full"
