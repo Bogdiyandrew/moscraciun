@@ -71,6 +71,7 @@ export default function Footer() {
                                 <li><FooterLink href="/#despre">Cum funcționează</FooterLink></li>
                                 <li><FooterLink href="/#povesti">Povestea Noastră</FooterLink></li>
                                 <li><FooterLink href="/#faq">Întrebări Frecvente</FooterLink></li>
+                                <li><FooterLink href="/contact">Contact</FooterLink></li>
                             </ul>
                         </div>
 
@@ -85,7 +86,7 @@ export default function Footer() {
                                     </a>
                                 </li>
                                 <li className="text-muted-foreground text-xs">
-                                    Luni - Vineri: 09:00 - 18:00
+                                    Luni - Vineri: 09:00 - 22:00
                                 </li>
                             </ul>
                         </div>
