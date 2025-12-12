@@ -7,9 +7,9 @@ import { useLoading } from '../context/LoadingContext';
 
 const loadingMessages = [
     "Conectare la Polul Nord...",
-    "Verificăm Lista Copiilor...",
-    "Hrănim Renii...",
-    "Lustruim Sania...",
+    "Verificăm lista copiilor...",
+    "Hrănim renii...",
+    "Lustruim sania...",
     "Împachetăm pixelii magici..."
 ];
 
