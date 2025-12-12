@@ -1,91 +1,123 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Snowflake } from 'lucide-react';
+import { Gift, Snowflake } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useLoading } from '../context/LoadingContext';
 
-export default function WinterLoader({ onLoadingComplete }: { onLoadingComplete?: () => void }) {
+const loadingMessages = [
+    "Conectare la Polul Nord...",
+    "Verificăm Lista Copiilor...",
+    "Hrănim Renii...",
+    "Lustruim Sania...",
+    "Împachetăm pixelii magici..."
+];
+
+export default function WinterLoader() {
+    // 1. AICI ERA PROBLEMA: Trebuie să luăm și 'setIsLoading' ca să putem opri loader-ul
     const { isLoading, setIsLoading } = useLoading();
+    const [messageIndex, setMessageIndex] = useState(0);
 
+    // 2. LOGICA DE OPRIRE AUTOMATĂ (TIMER)
     useEffect(() => {
-        // 1. Blochează scroll-ul când loader-ul este activ
-        if (isLoading) {
-            document.body.style.overflow = 'hidden';
-        }
+        // Dacă nu se încarcă, nu facem nimic
+        if (!isLoading) return;
 
-        // 2. Simulăm încărcarea (sau poți lega asta de încărcarea reală a asset-urilor)
-        const timer = setTimeout(() => {
+        // Schimbăm mesajele text la fiecare 800ms
+        const messageInterval = setInterval(() => {
+            setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+        }, 800);
+
+        // Oprim Loader-ul după 3.5 secunde (timp suficient să vadă animația)
+        const closeTimer = setTimeout(() => {
             setIsLoading(false);
+        }, 3500);
 
-            // 3. Deblochează scroll-ul după ce animația de ieșire începe
-            setTimeout(() => {
-                document.body.style.overflow = 'unset';
-                if (onLoadingComplete) onLoadingComplete();
-            }, 1000); // Așteptăm să se termine animația de exit
-
-        }, 2500); // Durata loading-ului (2.5 secunde)
-
+        // Curățăm timerele când componenta se demontează
         return () => {
-            document.body.style.overflow = 'unset';
-            clearTimeout(timer);
+            clearInterval(messageInterval);
+            clearTimeout(closeTimer);
         };
-    }, [onLoadingComplete, setIsLoading]);
+    }, [isLoading, setIsLoading]);
 
     return (
         <AnimatePresence mode="wait">
             {isLoading && (
                 <motion.div
-                    className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-zinc-950 text-white"
                     initial={{ opacity: 1 }}
-                    exit={{
-                        y: -1000, // Pleacă în sus
-                        opacity: 1,
-                        transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } // Curba Bezier pentru efect "premium"
-                    }}
+                    exit={{ opacity: 0 }} // Animația de dispariție
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/95 backdrop-blur-3xl"
                 >
-                    {/* Container Central */}
-                    <div className="relative flex flex-col items-center gap-6">
+                    {/* Background Glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
 
-                        {/* Fulgul care pulsează și se rotește */}
+                    {/* --- CENTRAL ICON --- */}
+                    <div className="relative mb-10">
+                        <motion.div
+                            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="absolute inset-0 bg-primary/20 rounded-full blur-md"
+                        />
+
                         <motion.div
                             animate={{
-                                rotate: 360,
-                                scale: [1, 1.2, 1],
+                                rotate: [0, -10, 10, -5, 5, 0],
+                                scale: [1, 1.1, 1]
                             }}
                             transition={{
-                                rotate: { duration: 8, repeat: Infinity, ease: "linear" },
-                                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                                duration: 1.5,
+                                repeat: Infinity,
+                                repeatDelay: 0.5
                             }}
-                            className="relative"
+                            className="relative bg-primary p-6 rounded-2xl shadow-2xl shadow-primary/30 z-10"
                         >
-                            <Snowflake className="w-16 h-16 text-primary" strokeWidth={1.5} />
-
-                            {/* Efect de strălucire în spate */}
-                            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse" />
+                            <Gift className="w-16 h-16 text-white" />
                         </motion.div>
 
-                        {/* Text cu apariție treptată */}
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-center space-y-2"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            className="absolute -top-6 -right-6 text-blue-400 z-20"
                         >
-                            <h2 className="text-2xl font-bold tracking-wider">BIROUL MOȘULUI</h2>
-                            <p className="text-zinc-400 text-sm animate-pulse">Pregătim magia...</p>
+                            <Snowflake className="w-8 h-8 fill-blue-400/20" />
                         </motion.div>
-
-                        {/* Progress Bar */}
-                        <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden mt-4">
-                            <motion.div
-                                className="h-full bg-primary"
-                                initial={{ width: "0%" }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 2.3, ease: "easeInOut" }}
-                            />
-                        </div>
                     </div>
+
+                    {/* --- TEXT --- */}
+                    <div className="h-10 flex items-center justify-center overflow-hidden relative w-full max-w-md text-center px-4">
+                        <AnimatePresence mode="wait">
+                            <motion.p
+                                key={messageIndex}
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -20, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-xl font-bold text-foreground"
+                            >
+                                {loadingMessages[messageIndex]}
+                            </motion.p>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* --- PROGRESS BAR --- */}
+                    <div className="mt-8 w-64 h-2 bg-muted rounded-full overflow-hidden relative border border-white/5">
+                        <motion.div
+                            className="absolute inset-y-0 left-0 bg-primary rounded-full"
+                            initial={{ width: "0%" }}
+                            animate={{ width: "100%" }}
+                            transition={{
+                                duration: 3.2, // Sincronizat cu timer-ul de 3.5s (puțin mai scurt ca să ajungă la capăt)
+                                ease: "easeInOut"
+                            }}
+                        />
+                        <motion.div
+                            className="absolute inset-y-0 w-10 bg-white/40 blur-sm"
+                            animate={{ x: [-40, 300] }}
+                            transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                        />
+                    </div>
+
                 </motion.div>
             )}
         </AnimatePresence>
