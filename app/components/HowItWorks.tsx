@@ -116,7 +116,7 @@ export default function HowItWorks() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
+                    viewport={{ once: true, amount: 0.2 }}
                     className="grid grid-cols-1 md:grid-cols-3 gap-8"
                 >
                     {steps.map((step, index) => (
