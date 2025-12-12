@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, BookOpen, Send, Sparkles } from 'lucide-react';
+import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
@@ -43,7 +43,7 @@ export default function Navigation() {
         { name: 'Cum funcționează', id: 'despre', icon: <BookOpen className="w-5 h-5" /> },
         { name: 'Poveste', id: 'povesti', icon: <Gift className="w-5 h-5" /> },
         { name: 'Întrebări', id: 'faq', icon: <HelpCircle className="w-5 h-5" /> },
-        { name: 'Formular', id: 'comanda', icon: <Send className="w-5 h-5" /> },
+        { name: 'Formular', id: 'comanda', icon: <Form className="w-5 h-5" /> },
     ];
 
     const sidebarVariants = {

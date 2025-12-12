@@ -2,35 +2,32 @@
 import { ChevronDown, PlayCircle, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLoading } from '../context/LoadingContext';
+import Image from 'next/image';
 
-// --- Componenta de Ninsoare (Reparată - Fără Hydration Error) ---
+// --- Componenta de Ninsoare (Neschimbată) ---
 const HeroSnow = () => {
-    // Generăm 30 de fulgi
     const flakes = Array.from({ length: 30 });
-
     return (
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             {flakes.map((_, i) => {
-                // FOLOSIM CALCUL DETERMINIST (BAZAT PE INDEX), NU RANDOM
-                // Astfel, serverul și clientul calculează exact aceleași valori.
-                const left = (i * 17) % 100;      // Distribuție aparent aleatorie pe lățime
-                const width = 2 + (i % 4);        // Mărime între 2px și 6px
-                const delay = (i * 0.4) % 5;      // Delay
-                const duration = 5 + (i % 5);     // Durată cădere
+                const left = (i * 17) % 100;
+                const width = 2 + (i % 4);
+                const delay = (i * 0.4) % 5;
+                const duration = 5 + (i % 5);
 
                 return (
                     <motion.div
                         key={i}
-                        className="absolute rounded-full bg-white/60 dark:bg-white/40 blur-[1px]"
+                        className="absolute rounded-full bg-white/80 dark:bg-white/60 blur-[1px]"
                         style={{
                             left: `${left}%`,
                             width: `${width}px`,
-                            height: `${width}px`, // Păstrăm proporția rotundă
+                            height: `${width}px`,
                             top: -20,
                         }}
                         animate={{
-                            y: [0, 800], // Cade până jos
-                            x: [0, (i % 2 === 0 ? 20 : -20)], // Oscilează stânga/dreapta
+                            y: [0, 800],
+                            x: [0, (i % 2 === 0 ? 20 : -20)],
                             opacity: [0, 0.8, 0],
                         }}
                         transition={{
@@ -54,18 +51,70 @@ export default function Hero() {
     };
 
     return (
-        <section id="hero" className="relative min-h-[90vh] flex items-center justify-center px-4 bg-background transition-colors duration-300 pt-24 md:pt-0 overflow-hidden">
+        <section id="hero" className="relative min-h-[90vh] flex items-center justify-center px-4 transition-colors duration-300 pt-24 md:pt-0 overflow-hidden">
 
-            {/* Fundal Gradient */}
-            <div className="absolute inset-0 bg-linear-to-b from-blue-50/50 to-white dark:from-slate-950 dark:to-background -z-20" />
+            {/* ========================================================= */}
+            {/* ZONA DE IMAGINI BACKGROUND (SISTEMUL CU 4 IMAGINI)        */}
+            {/* ========================================================= */}
+            <div className="absolute inset-0 -z-30 w-full h-full">
 
-            {/* Overlay Protector */}
-            <div className="absolute inset-0 bg-linear-to-b from-white/80 via-white/40 to-white dark:from-black/80 dark:via-black/40 dark:to-background -z-10 backdrop-blur-[2px]" />
+                {/* 1. LIGHT MODE - MOBILE (9:16) */}
+                {/* Se vede doar pe mobil (md:hidden) și doar pe light (dark:hidden) */}
+                <div className="relative w-full h-full block md:hidden dark:hidden">
+                    <Image
+                        src="/hero/hero-light-mobile.webp"
+                        alt="Hero Background Light Mobile"
+                        fill
+                        className="object-cover object-center"
+                        priority // Încarcă imaginea prioritar (LCP optimization)
+                    />
+                </div>
 
-            {/* EFECT DE NINSOARE (SAFE) */}
+                {/* 2. LIGHT MODE - DESKTOP (16:9) */}
+                {/* Se vede doar pe desktop (md:block) și doar pe light (dark:hidden) */}
+                <div className="relative w-full h-full hidden md:block dark:hidden">
+                    <Image
+                        src="/hero/hero-light-desktop.webp"
+                        alt="Hero Background Light Desktop"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
+                </div>
+
+                {/* 3. DARK MODE - MOBILE (9:16) */}
+                {/* Se vede doar pe mobil (md:hidden) și doar pe dark (dark:block) */}
+                <div className="relative w-full h-full hidden dark:block dark:md:hidden">
+                    <Image
+                        src="/hero/hero-dark-mobile.webp"
+                        alt="Hero Background Dark Mobile"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
+                </div>
+
+                {/* 4. DARK MODE - DESKTOP (16:9) */}
+                {/* Se vede doar pe desktop (dark:md:block) */}
+                <div className="relative w-full h-full hidden dark:md:block">
+                    <Image
+                        src="/hero/hero-dark-desktop.webp"
+                        alt="Hero Background Dark Desktop"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
+                </div>
+            </div>
+
+            {/* OVERLAY PROTECTOR (Gradient) */}
+            {/* Crucial: Fără asta, textul nu se citește peste poze colorate */}
+            <div className="absolute inset-0 bg-linear-to-b from-white/90 via-white/60 to-white dark:from-black/80 dark:via-black/50 dark:to-background -z-20" />
+
+            {/* EFECT DE NINSOARE */}
             <HeroSnow />
 
-            {/* Glow Roșu */}
+            {/* Glow Roșu Decorativ (Peste imagine, dar sub text) */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isLoading ? { opacity: 0, scale: 0.8 } : { opacity: 1, scale: 1 }}
@@ -73,6 +122,9 @@ export default function Hero() {
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-red-500/10 dark:bg-red-500/5 rounded-full blur-[120px] -z-10"
             ></motion.div>
 
+            {/* ========================================================= */}
+            {/* CONȚINUT TEXT & BUTOANE                                   */}
+            {/* ========================================================= */}
             <div className="text-center max-w-4xl mx-auto relative z-10">
 
                 {/* Badge Marketing */}
@@ -80,7 +132,7 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={isLoading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.8 }}
-                    className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 px-5 py-2 rounded-full text-sm font-bold text-red-600 dark:text-red-400 mb-8 shadow-sm hover:scale-105 transition-transform cursor-default"
+                    className="inline-flex items-center gap-2 bg-white/80 dark:bg-red-900/40 border border-red-100 dark:border-red-900/50 backdrop-blur-sm px-5 py-2 rounded-full text-sm font-bold text-red-600 dark:text-red-400 mb-8 shadow-sm hover:scale-105 transition-transform cursor-default"
                 >
                     <Star className="w-4 h-4 fill-current animate-[spin_3s_linear_infinite]" />
                     <span>Oficial: Lista lui Moșu&apos; e deschisă</span>
@@ -106,7 +158,7 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                    className="text-lg md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+                    className="text-lg md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-medium"
                 >
                     Moș Crăciun înregistrează un mesaj video unic pentru copilul tău.
                     Fără roboți, doar <span className="font-semibold text-foreground">emoție pură</span>.
