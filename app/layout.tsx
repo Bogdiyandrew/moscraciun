@@ -26,6 +26,9 @@ const myCustomFont = localFont({
 export const metadata: Metadata = {
   title: "Biroul lui Moș Crăciun - Mesaje Video Personalizate",
   description: "Comandă un mesaj video magic pentru copilul tău, direct de la Polul Nord.",
+  icons: {
+    icon: "/biroulmosului.svg",
+  },
 };
 
 import { LoadingProvider } from "./context/LoadingContext";

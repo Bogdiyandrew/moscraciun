@@ -95,7 +95,7 @@ export default function Hero() {
                 </div>
             </div>
 
-            <div className="absolute inset-0 z-1 bg-linear-to-b from-white/90 via-white/60 to-white dark:from-black/80 dark:via-black/50 dark:to-background" />
+            <div className="absolute inset-0 z-1 bg-linear-to-b from-white/60 via-white/30 to-white dark:from-black/80 dark:via-black/50 dark:to-background" />
 
             <div className="absolute inset-0 pointer-events-none z-2">
                 <HeroSnow />

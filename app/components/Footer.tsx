@@ -1,6 +1,8 @@
 'use client';
-import { Gift, Heart, Facebook, Instagram, Mail, Snowflake } from 'lucide-react';
+
+import { Heart, Facebook, Instagram, Mail, Snowflake } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image'; // Import necesar pentru SVG
 import { motion } from 'framer-motion';
 
 export default function Footer() {
@@ -42,8 +44,15 @@ export default function Footer() {
 
                         <div className="col-span-1 md:col-span-2 space-y-6">
                             <Link href="/" className="flex items-center gap-2 group w-fit">
-                                <div className="bg-primary p-2.5 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300">
-                                    <Gift className="text-white w-6 h-6" />
+                                {/* Logo modificat aici */}
+                                <div className="bg-primary p-2.5 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300 flex items-center justify-center">
+                                    <Image
+                                        src="/biroulmosului.svg"
+                                        alt="Logo Biroul Mosului"
+                                        width={24}
+                                        height={24}
+                                        className="w-6 h-6 object-contain"
+                                    />
                                 </div>
                                 <span className="font-bold text-xl text-foreground tracking-tight">
                                     Biroul<span className="text-primary">Mosului</span>.ro

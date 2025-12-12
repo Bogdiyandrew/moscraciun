@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+// Am păstrat Gift în importuri deoarece este folosit în lista de navItems mai jos
 import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles, SendHorizontal } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image'; // Import necesar pentru a afișa SVG-ul
 
 export default function Navigation() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -65,6 +67,7 @@ export default function Navigation() {
 
     return (
         <>
+            {/* --- DESKTOP SIDEBAR --- */}
             <motion.aside
                 initial="hidden"
                 animate="visible"
@@ -74,12 +77,19 @@ export default function Navigation() {
                 <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-primary/5 to-transparent pointer-events-none" />
 
                 <div className="p-6 border-b border-border/50 flex items-center gap-3 relative z-10">
+                    {/* LOGO DESKTOP */}
                     <motion.div
                         whileHover={{ rotate: 10, scale: 1.1 }}
                         onClick={handleLogoClick}
-                        className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/30 cursor-pointer"
+                        className="bg-primary p-1 rounded-full cursor-pointer flex"
                     >
-                        <Gift className="text-white w-6 h-6" />
+                        <Image
+                            src="/biroulmos.svg"
+                            alt="Logo"
+                            width={48}
+                            height={48}
+                            className="w-10 h-10 object-contain"
+                        />
                     </motion.div>
                     <span
                         onClick={handleLogoClick}
@@ -150,16 +160,23 @@ export default function Navigation() {
                 </motion.div>
             </motion.aside>
 
-
+            {/* --- MOBILE HEADER --- */}
             <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-lg border-b border-border/50 transition-colors duration-300">
                 <div className="px-4 h-16 flex items-center justify-between">
 
                     <div onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
+                        {/* LOGO MOBILE */}
                         <motion.div
                             whileTap={{ scale: 0.9 }}
-                            className="bg-primary p-1.5 rounded-lg shadow-sm"
+                            className="bg-primary p-1.5 rounded-lg shadow-sm flex items-center justify-center"
                         >
-                            <Gift className="text-white w-5 h-5" />
+                            <Image
+                                src="/biroulmosului.svg"
+                                alt="Logo"
+                                width={20}
+                                height={20}
+                                className="w-5 h-5 object-contain"
+                            />
                         </motion.div>
                         <span className="font-bold text-lg text-foreground">
                             Biroul<span className="text-primary">Mosului</span>
