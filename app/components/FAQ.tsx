@@ -2,29 +2,23 @@
 import { useRef, useState } from 'react';
 import { HelpCircle, Gift, Clock, ShieldCheck, UserCheck, Sparkles } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-
-// --- COMPONENTA PENTRU CARD 3D TILT ---
 const TiltCard = ({ item, index }: { item: any, index: number }) => {
     const ref = useRef<HTMLDivElement>(null);
 
-    // Variabile pentru poziția mouse-ului
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    // Fizica arcului pentru o mișcare fluidă (fără sacadări)
     const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
     const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
 
-    // Transformăm poziția mouse-ului în grade de rotație (-20deg la 20deg)
     const rotateX = useTransform(mouseY, [-0.5, 0.5], ["15deg", "-15deg"]);
     const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-15deg", "15deg"]);
 
-    // Lumina care se mișcă (Shine effect)
     const sheenGradient = useTransform(
         mouseX,
         [-0.5, 0.5],
         [
-            "linear-gradient(to right, transparent 0%, rgba(255,255,255,0) 0%, transparent 100%)", // fallback
+            "linear-gradient(to right, transparent 0%, rgba(255,255,255,0) 0%, transparent 100%)",
             "linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 55%, transparent 100%)"
         ]
     );
@@ -36,7 +30,6 @@ const TiltCard = ({ item, index }: { item: any, index: number }) => {
         const width = rect.width;
         const height = rect.height;
 
-        // Calculăm poziția mouse-ului relativ la centrul cardului (-0.5 la 0.5)
         const mouseXRel = (e.clientX - rect.left) / width - 0.5;
         const mouseYRel = (e.clientY - rect.top) / height - 0.5;
 
@@ -45,12 +38,10 @@ const TiltCard = ({ item, index }: { item: any, index: number }) => {
     };
 
     const handleMouseLeave = () => {
-        // Resetăm la centru când pleacă mouse-ul
         x.set(0);
         y.set(0);
     };
 
-    // Culori dinamice în funcție de index (Roșu, Verde, Auriu, Albastru)
     const getTheme = (i: number) => {
         const themes = [
             { border: "group-hover:border-red-500/50", shadow: "group-hover:shadow-red-500/20", icon: "text-red-500", bg: "bg-red-500/10" },
@@ -84,7 +75,6 @@ const TiltCard = ({ item, index }: { item: any, index: number }) => {
                 ${theme.border} ${theme.shadow} hover:shadow-2xl
             `}
         >
-            {/* Efectul de adâncime (Textul iese în relief) */}
             <div style={{ transform: "translateZ(50px)" }} className="relative z-10">
                 <div className={`w-12 h-12 rounded-xl ${theme.bg} flex items-center justify-center mb-6 transition-colors`}>
                     {item.icon}
@@ -94,7 +84,6 @@ const TiltCard = ({ item, index }: { item: any, index: number }) => {
                 <p className="text-muted-foreground leading-relaxed">{item.a}</p>
             </div>
 
-            {/* Shine Overlay */}
             <motion.div
                 className="absolute inset-0 rounded-2xl pointer-events-none z-20"
                 style={{ background: sheenGradient }}
@@ -130,7 +119,6 @@ export default function FAQ() {
     return (
         <section id="faq" className="py-24 bg-background border-t border-border px-4 overflow-hidden relative">
 
-            {/* Background Decorativ Ambient */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-5xl pointer-events-none">
                 <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px]" />
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px]" />

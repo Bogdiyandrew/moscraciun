@@ -104,14 +104,13 @@ export default function OrderForm() {
         }
     };
 
-    // Animații
+
     const variants = {
         enter: (direction: number) => ({ x: direction > 0 ? 50 : -50, opacity: 0 }),
         center: { x: 0, opacity: 1 },
         exit: (direction: number) => ({ x: direction < 0 ? 50 : -50, opacity: 0 }),
     };
 
-    // --- VIEW SUCCES ---
     if (isSuccess) {
         return (
             <div id="comanda" className="w-full max-w-2xl mx-auto bg-card border border-green-500/30 rounded-3xl p-10 shadow-2xl text-center my-10">
@@ -133,16 +132,13 @@ export default function OrderForm() {
         );
     }
 
-    // --- FORMULAR PRINCIPAL ---
     return (
         <section
             id="comanda"
             className="w-full max-w-2xl mx-auto bg-card border border-border rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden transition-colors duration-300 scroll-mt-24"
         >
-            {/* Background Decorativ Subtil */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
 
-            {/* Header Progress */}
             <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-foreground">
@@ -167,7 +163,6 @@ export default function OrderForm() {
             <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={step}>
 
-                    {/* --- PASUL 1: INFO COPIL --- */}
                     {step === 1 && (
                         <motion.div
                             key="step1"
@@ -269,7 +264,6 @@ export default function OrderForm() {
                                 <button
                                     type="button"
                                     onClick={handleNext}
-                                    // Folosim text-background pe bg-foreground pentru contrast maxim in orice tema
                                     className="w-full bg-foreground text-background font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-foreground/90 transition-colors shadow-md"
                                 >
                                     Continuă <ArrowRight className="w-5 h-5" />
@@ -278,7 +272,6 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-                    {/* --- PASUL 1.5: UPLOAD --- */}
                     {step === 1.5 && (
                         <motion.div
                             key="step1.5"
@@ -300,7 +293,6 @@ export default function OrderForm() {
                                 </div>
                             </div>
 
-                            {/* Componenta Upload */}
                             <ImageUpload onUploadComplete={(urls) => setFormData(prev => ({ ...prev, images: urls }))} />
 
                             <div className="space-y-2 pt-4">
@@ -336,7 +328,6 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-                    {/* --- PASUL 2: CONTACT --- */}
                     {step === 2 && (
                         <motion.div
                             key="step2"

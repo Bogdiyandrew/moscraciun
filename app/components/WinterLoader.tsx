@@ -14,26 +14,19 @@ const loadingMessages = [
 ];
 
 export default function WinterLoader() {
-    // 1. AICI ERA PROBLEMA: Trebuie să luăm și 'setIsLoading' ca să putem opri loader-ul
     const { isLoading, setIsLoading } = useLoading();
     const [messageIndex, setMessageIndex] = useState(0);
 
-    // 2. LOGICA DE OPRIRE AUTOMATĂ (TIMER)
     useEffect(() => {
-        // Dacă nu se încarcă, nu facem nimic
         if (!isLoading) return;
 
-        // Schimbăm mesajele text la fiecare 800ms
         const messageInterval = setInterval(() => {
             setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
         }, 800);
-
-        // Oprim Loader-ul după 3.5 secunde (timp suficient să vadă animația)
         const closeTimer = setTimeout(() => {
             setIsLoading(false);
         }, 3500);
 
-        // Curățăm timerele când componenta se demontează
         return () => {
             clearInterval(messageInterval);
             clearTimeout(closeTimer);
@@ -45,14 +38,12 @@ export default function WinterLoader() {
             {isLoading && (
                 <motion.div
                     initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }} // Animația de dispariție
+                    exit={{ opacity: 0 }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
                     className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/95 backdrop-blur-3xl"
                 >
-                    {/* Background Glow */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
 
-                    {/* --- CENTRAL ICON --- */}
                     <div className="relative mb-10">
                         <motion.div
                             animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
@@ -84,7 +75,6 @@ export default function WinterLoader() {
                         </motion.div>
                     </div>
 
-                    {/* --- TEXT --- */}
                     <div className="h-10 flex items-center justify-center overflow-hidden relative w-full max-w-md text-center px-4">
                         <AnimatePresence mode="wait">
                             <motion.p
@@ -100,14 +90,13 @@ export default function WinterLoader() {
                         </AnimatePresence>
                     </div>
 
-                    {/* --- PROGRESS BAR --- */}
                     <div className="mt-8 w-64 h-2 bg-muted rounded-full overflow-hidden relative border border-white/5">
                         <motion.div
                             className="absolute inset-y-0 left-0 bg-primary rounded-full"
                             initial={{ width: "0%" }}
                             animate={{ width: "100%" }}
                             transition={{
-                                duration: 3.2, // Sincronizat cu timer-ul de 3.5s (puțin mai scurt ca să ajungă la capăt)
+                                duration: 3.2,
                                 ease: "easeInOut"
                             }}
                         />

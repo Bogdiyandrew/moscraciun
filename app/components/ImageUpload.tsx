@@ -18,7 +18,6 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
         const files = Array.from(e.target.files);
         const newUrls: string[] = [];
 
-        // Limita: Maxim 5 poze
         if (files.length + previewUrls.length > 5) {
             alert("Poți încărca maxim 5 poze!");
             setUploading(false);
@@ -27,22 +26,15 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
 
         try {
             for (const file of files) {
-                // --- MODIFICAREA ESTE AICI ---
-                // 1. Curățăm numele fișierului de spații și caractere speciale (le înlocuim cu "_")
                 const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-
-                // 2. Generăm numele final unic
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${cleanName}`;
-                // -----------------------------
 
-                // Upload în Supabase Storage (bucket-ul 'client-uploads')
                 const { data, error } = await supabase.storage
                     .from('client-uploads')
                     .upload(fileName, file);
 
                 if (error) throw error;
 
-                // Obținem URL-ul public
                 const { data: publicUrlData } = supabase.storage
                     .from('client-uploads')
                     .getPublicUrl(fileName);
@@ -55,7 +47,7 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
             onUploadComplete(updatedList);
 
         } catch (error: any) {
-            console.error(error); // E bine să vezi eroarea și în consolă
+            console.error(error);
             alert('Eroare la upload: ' + error.message);
         } finally {
             setUploading(false);
@@ -78,7 +70,6 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
                 </span>
             </label>
 
-            {/* Zona de Drop / Input */}
             <div className="border-2 border-dashed border-zinc-700 hover:border-primary rounded-xl p-6 transition-colors text-center cursor-pointer relative bg-zinc-900/50">
                 <input
                     type="file"
@@ -100,7 +91,6 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
                 </div>
             </div>
 
-            {/* Previzualizare Poze */}
             {previewUrls.length > 0 && (
                 <div className="grid grid-cols-3 gap-3">
                     {previewUrls.map((url, idx) => (

@@ -65,18 +65,14 @@ export default function Navigation() {
 
     return (
         <>
-            {/* --- DESKTOP SIDEBAR (Stânga) --- */}
             <motion.aside
                 initial="hidden"
                 animate="visible"
                 variants={sidebarVariants}
-                // Glassmorphism effect: bg-card/60 + backdrop-blur-xl
                 className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 z-50 bg-card/80 dark:bg-card/40 backdrop-blur-xl border-r border-border h-screen transition-colors duration-300 shadow-2xl"
             >
-                {/* Decor: Gradient subtil în fundal */}
                 <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-primary/5 to-transparent pointer-events-none" />
 
-                {/* Logo Area */}
                 <div className="p-6 border-b border-border/50 flex items-center gap-3 relative z-10">
                     <motion.div
                         whileHover={{ rotate: 10, scale: 1.1 }}
@@ -93,19 +89,16 @@ export default function Navigation() {
                     </span>
                 </div>
 
-                {/* Navigation Links */}
                 <nav className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto relative z-10">
                     {navItems.map((item) => (
                         <motion.button
                             key={item.id}
                             variants={itemVariants}
-                            // Glow effect la hover
                             whileHover={{ scale: 1.02, x: 5, backgroundColor: "rgba(var(--primary), 0.1)" }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => scrollToSection(item.id)}
                             className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-primary transition-all text-sm font-medium group relative overflow-hidden cursor-pointer"
                         >
-                            {/* Background activ doar la hover (controlat de whileHover, dar putem pune si clasa) */}
                             <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center rounded-full" />
 
                             <span className="group-hover:text-primary transition-colors relative z-10 group-hover:scale-110 duration-200">
@@ -116,7 +109,6 @@ export default function Navigation() {
                     ))}
                 </nav>
 
-                {/* Footer Sidebar (Theme + CTA) */}
                 <motion.div
                     variants={itemVariants}
                     className="p-4 border-t border-border/50 space-y-4 relative z-10 bg-background/50 backdrop-blur-sm"
@@ -151,7 +143,6 @@ export default function Navigation() {
                             transition-all cursor-pointer relative overflow-hidden
                         "
                     >
-                        {/* Shine effect pe buton */}
                         <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-linear-to-r from-transparent to-white opacity-20 hover:animate-shine" />
                         <Send className="w-4 h-4 relative z-10" />
                         <span className="relative z-10">Comandă Video</span>
@@ -160,11 +151,9 @@ export default function Navigation() {
             </motion.aside>
 
 
-            {/* --- MOBILE HEADER (Sus) - Translucid --- */}
             <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-lg border-b border-border/50 transition-colors duration-300">
                 <div className="px-4 h-16 flex items-center justify-between">
 
-                    {/* Logo Mobil */}
                     <div onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
                         <motion.div
                             whileTap={{ scale: 0.9 }}
@@ -178,7 +167,6 @@ export default function Navigation() {
                     </div>
 
 
-                    {/* Controls Mobil */}
                     <div className="flex items-center gap-2">
                         {mounted && (
                             <motion.button
@@ -200,11 +188,9 @@ export default function Navigation() {
                 </div>
             </header>
 
-            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <>
-                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -214,7 +200,6 @@ export default function Navigation() {
                             style={{ zIndex: 9990 }}
                         />
 
-                        {/* Drawer */}
                         <motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}

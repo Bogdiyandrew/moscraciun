@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-background: var(--background);
@@ -19,49 +20,36 @@
 }
 
 :root {
-  /* --- LIGHT MODE (ZI) --- */
+
   --background: #ffffff;
-  /* Alb pur pentru curățenie maximă */
   --foreground: #09090b;
-  /* Zinc 950 */
 
   --card: #f4f4f5;
-  /* Zinc 100 - Puțin gri pentru separare */
   --card-foreground: #09090b;
 
   --primary: #dc2626;
-  /* Roșu Crăciun */
   --primary-foreground: #ffffff;
 
   --muted: #f4f4f5;
   --muted-foreground: #71717a;
-  /* Zinc 500 */
 
   --border: #e4e4e7;
-  /* Zinc 200 */
 }
 
 .dark {
-  /* --- DARK MODE (NOAPTE - Varianta Neutră) --- */
   --background: #09090b;
-  /* Zinc 950 (Negru neutru) */
   --foreground: #fafafa;
-  /* Zinc 50 */
 
   --card: #18181b;
-  /* Zinc 900 */
   --card-foreground: #fafafa;
 
   --primary: #dc2626;
   --primary-foreground: #ffffff;
 
   --muted: #27272a;
-  /* Zinc 800 */
   --muted-foreground: #a1a1aa;
-  /* Zinc 400 */
 
   --border: #27272a;
-  /* Zinc 800 */
 }
 
 body {

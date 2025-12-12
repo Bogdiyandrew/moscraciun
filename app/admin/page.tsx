@@ -20,7 +20,7 @@ export default function AdminDashboard() {
         if (!confirm) return;
 
         await supabase.from('orders').update({ status: 'completed' }).eq('id', id);
-        fetchOrders(); // Refresh
+        fetchOrders();
     };
 
     useEffect(() => {
@@ -38,7 +38,6 @@ export default function AdminDashboard() {
                     {orders.map((order) => (
                         <div key={order.id} className={`p-6 bg-zinc-900 rounded-xl border ${order.status === 'completed' ? 'border-green-500/30 opacity-60' : 'border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.1)]'}`}>
 
-                            {/* HEADER COMANDA */}
                             <div className="flex justify-between items-start mb-4 border-b border-zinc-800 pb-4">
                                 <div>
                                     <h2 className="text-2xl font-bold text-white flex items-center gap-2">
@@ -57,7 +56,6 @@ export default function AdminDashboard() {
                                 </span>
                             </div>
 
-                            {/* DETALII TEXT (GRID) */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-6">
                                 <div className="bg-green-900/10 border border-green-500/20 p-3 rounded-lg">
                                     <strong className="text-green-400 block mb-1">👍 Faptă Bună</strong>
@@ -77,7 +75,6 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
-                            {/* --- ZONA NOTIȚE EXTRA --- */}
                             {order.notes && (
                                 <div className="mb-6 bg-zinc-800/50 p-3 rounded-lg border border-zinc-700">
                                     <strong className="text-zinc-400 text-xs uppercase flex items-center gap-1 mb-1">
@@ -87,7 +84,6 @@ export default function AdminDashboard() {
                                 </div>
                             )}
 
-                            {/* --- ZONA POZE UPLOADATE --- */}
                             {order.images && order.images.length > 0 ? (
                                 <div className="mb-6">
                                     <strong className="text-zinc-400 text-xs uppercase flex items-center gap-1 mb-3">
@@ -121,7 +117,6 @@ export default function AdminDashboard() {
                                 </div>
                             )}
 
-                            {/* ACTION BUTTONS */}
                             {order.status !== 'completed' && (
                                 <div className="flex justify-end pt-4 border-t border-zinc-800">
                                     <button

@@ -3,16 +3,13 @@
 import { ClipboardList, Video, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// --- COMPONENTA DE NINSOARE (Optimizată pentru Vizibilitate) ---
 const SnowEffect = () => {
-    // Generăm 20 de fulgi
     const flakes = Array.from({ length: 20 });
 
     return (
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700">
             {flakes.map((_, i) => {
-                // Calcule deterministe (fără Math.random) pentru a evita erori de Hydration
-                const leftPos = (i * 13) % 100; // Distribuție pe toată lățimea
+                const leftPos = (i * 13) % 100;
                 const delay = (i * 0.2) % 2;
                 const duration = 2 + ((i * 0.4) % 3);
                 const size = 3 + (i % 4);
@@ -20,9 +17,6 @@ const SnowEffect = () => {
                 return (
                     <motion.div
                         key={i}
-                        // FIX: Culoare adaptivă. 
-                        // Light Mode: Gri foarte deschis (bg-slate-900/10) ca să se vadă pe alb.
-                        // Dark Mode: Alb pur (bg-white/70).
                         className="absolute rounded-full bg-slate-900/10 dark:bg-white/70"
                         style={{
                             left: `${leftPos}%`,
@@ -31,9 +25,9 @@ const SnowEffect = () => {
                             top: -20,
                         }}
                         animate={{
-                            y: [0, 400], // Cade în jos
-                            x: [0, (i % 2 === 0 ? 20 : -20)], // Oscilează stânga-dreapta
-                            opacity: [0, 1, 0], // Fade in/out
+                            y: [0, 400],
+                            x: [0, (i % 2 === 0 ? 20 : -20)],
+                            opacity: [0, 1, 0],
                         }}
                         transition={{
                             duration: duration,
@@ -54,7 +48,6 @@ export default function HowItWorks() {
             icon: <ClipboardList className="w-8 h-8" />,
             title: "1. Completezi dosarul",
             desc: "Ne spui numele, vârsta și 'secretul' pe care doar Moșul îl știe.",
-            // Configurare Temă Roșie
             gradient: "from-red-500/10 via-red-500/5 to-transparent",
             border: "border-red-200 dark:border-red-900",
             iconColor: "text-red-600 dark:text-red-400",
@@ -65,7 +58,6 @@ export default function HowItWorks() {
             icon: <Video className="w-8 h-8" />,
             title: "2. Moșul filmează",
             desc: "Înregistrăm mesajul manual în studioul de la Polul Nord.",
-            // Configurare Temă Verde
             gradient: "from-green-500/10 via-green-500/5 to-transparent",
             border: "border-green-200 dark:border-green-900",
             iconColor: "text-green-600 dark:text-green-400",
@@ -76,7 +68,6 @@ export default function HowItWorks() {
             icon: <Gift className="w-8 h-8" />,
             title: "3. Primești magia",
             desc: "Primești link-ul pe email. Emoția copilului tău este garantată.",
-            // Configurare Temă Aurie
             gradient: "from-amber-500/10 via-amber-500/5 to-transparent",
             border: "border-amber-200 dark:border-amber-900",
             iconColor: "text-amber-600 dark:text-amber-400",
@@ -104,7 +95,6 @@ export default function HowItWorks() {
 
     return (
         <section id="despre" className="py-24 bg-background px-4 overflow-hidden relative">
-            {/* Background Glows (lumini ambientale) */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
                 <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/5 rounded-full blur-3xl" />
                 <div className="absolute bottom-20 right-10 w-72 h-72 bg-green-500/5 rounded-full blur-3xl" />
@@ -134,7 +124,6 @@ export default function HowItWorks() {
                             key={index}
                             variants={itemVariants}
                             whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                            // 'group' permite controlul copiilor (SnowEffect) la hover pe părinte
                             className={`
                                 group relative overflow-hidden backdrop-blur-sm
                                 border rounded-3xl p-8 shadow-sm 
@@ -142,10 +131,8 @@ export default function HowItWorks() {
                                 hover:shadow-xl transition-all duration-500
                             `}
                         >
-                            {/* Componenta de Ninsoare */}
                             <SnowEffect />
 
-                            {/* Cerc decorativ colț (pentru atmosferă) */}
                             <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-20 transition-colors duration-500 ${step.bgIcon} ${step.bgIconHover}`} />
 
                             <div className={`

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Scroll, Heart, Sparkles, Video, UserCheck, Fingerprint } from 'lucide-react';
 
 export default function Story() {
-    // Definim cele 3 piloni ai poveștii pentru a le randa dinamic
     const features = [
         {
             icon: <Video className="w-8 h-8 text-blue-500" />,
@@ -31,8 +30,6 @@ export default function Story() {
     return (
         <section id="povesti" className="py-32 bg-background px-4 relative overflow-hidden">
 
-            {/* --- ELEMENTE DECORATIVE DE FUNDAL --- */}
-            {/* O "rolă de film" stilizată în fundal sau o formă abstractă */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[100px]" />
                 <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px]" />
@@ -40,7 +37,6 @@ export default function Story() {
 
             <div className="max-w-6xl mx-auto relative z-10">
 
-                {/* HEADLINE */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +47,6 @@ export default function Story() {
                     <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6">
                         De ce <span className="text-primary relative inline-block">
                             Biroul Moșului?
-                            {/* O linie curbată sub text pentru accent */}
                             <svg className="absolute w-full h-3 -bottom-2 left-0 text-primary opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
                                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
                             </svg>
@@ -63,7 +58,6 @@ export default function Story() {
                     </p>
                 </motion.div>
 
-                {/* GRID CARDURI */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {features.map((item, index) => (
                         <motion.div
@@ -78,15 +72,12 @@ export default function Story() {
                                 transition-all duration-300 hover:shadow-2xl ${item.border}
                             `}
                         >
-                            {/* Gradient Background subtil la hover */}
                             <div className={`absolute inset-0 rounded-3xl bg-linear-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
-                            {/* Icon Wrapper */}
                             <div className="relative z-10 w-16 h-16 rounded-2xl bg-background border border-border flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
                                 {item.icon}
                             </div>
 
-                            {/* Content */}
                             <div className="relative z-10">
                                 <h3 className="text-2xl font-bold text-foreground mb-4">{item.title}</h3>
                                 <p className="text-muted-foreground leading-relaxed">
@@ -94,7 +85,6 @@ export default function Story() {
                                 </p>
                             </div>
 
-                            {/* Decorative element: Sparkles la hover */}
                             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-primary">
                                 <Sparkles className="w-5 h-5 animate-pulse" />
                             </div>
@@ -102,7 +92,6 @@ export default function Story() {
                     ))}
                 </div>
 
-                {/* QUOTE SECTION (Pentru impact emoțional) */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -110,7 +99,6 @@ export default function Story() {
                     transition={{ delay: 0.6 }}
                     className="mt-24 p-8 md:p-12 rounded-3xl bg-linear-to-r from-zinc-900 to-zinc-950 border border-zinc-800 text-center relative overflow-hidden"
                 >
-                    {/* Pattern de Crăciun subtil în background */}
                     <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
 
                     <div className="relative z-10">

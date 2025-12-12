@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 export default function Footer() {
     const currentYear = new Date().getFullYear();
 
-    // Componentă pentru link-uri animate la hover
     const FooterLink = ({ href, children }: { href: string, children: React.ReactNode }) => (
         <Link href={href} className="group flex items-center gap-2 w-fit text-muted-foreground hover:text-primary transition-colors duration-300">
             <span className="opacity-0 -ml-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 transform translate-x-2 text-primary">
@@ -19,7 +18,6 @@ export default function Footer() {
     return (
         <footer className="relative w-full mt-24">
 
-            {/* 1. SEPARATOR TIP "ZĂPADĂ" (SVG Decorativ) */}
             <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180 -translate-y-[99%] z-10">
                 <svg className="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                     <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
@@ -30,7 +28,6 @@ export default function Footer() {
 
             <div className="relative bg-card/50 dark:bg-card/30 backdrop-blur-lg border-t border-border pt-16 pb-8 overflow-hidden">
 
-                {/* 2. GLOW EFFECT (Aurora Boreală în Footer) */}
                 <div className="absolute bottom-0 left-1/4 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
                 <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
@@ -43,7 +40,6 @@ export default function Footer() {
                         className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16"
                     >
 
-                        {/* COL 1: Brand & Misiune */}
                         <div className="col-span-1 md:col-span-2 space-y-6">
                             <Link href="/" className="flex items-center gap-2 group w-fit">
                                 <div className="bg-primary p-2.5 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300">
@@ -68,7 +64,6 @@ export default function Footer() {
                             </div>
                         </div>
 
-                        {/* COL 2: Link-uri Rapide */}
                         <div>
                             <h3 className="font-bold text-foreground mb-6">Exploarează</h3>
                             <ul className="space-y-3 text-sm">
@@ -79,7 +74,6 @@ export default function Footer() {
                             </ul>
                         </div>
 
-                        {/* COL 3: Legal & Contact */}
                         <div>
                             <h3 className="font-bold text-foreground mb-6">Suport & Legal</h3>
                             <ul className="space-y-3 text-sm">
@@ -97,7 +91,6 @@ export default function Footer() {
                         </div>
                     </motion.div>
 
-                    {/* ZONA ANPC - CORECTATĂ (Sursele GitHub originale) */}
                     <div className="border-t border-border/50 py-8">
                         <div className="flex flex-wrap justify-center md:justify-start gap-6 opacity-80 hover:opacity-100 transition-opacity">
                             <a
@@ -127,7 +120,6 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* BOTTOM BAR */}
                     <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
                         <p>© {currentYear} BiroulMosului.ro. Toate drepturile rezervate.</p>
 

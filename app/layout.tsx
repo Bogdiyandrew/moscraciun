@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 const myCustomFont = localFont({
-  src: "./fonts/PWHappyChristmas.ttf", // Calea către fișier (relativă la layout.tsx)
-  variable: "--font-craciun",       // Numele variabilei CSS pentru Tailwind
-  weight: "100 900",               // Specifică greutățile disponibile (sau o singură valoare gen "400")
+  src: "./fonts/PWHappyChristmas.ttf",
+  variable: "--font-craciun",
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
@@ -45,25 +45,15 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* 1. Loader-ul trebuie să fie AICI, în interiorul ThemeProvider, ca să ia culorile corecte */}
             <WinterLoader />
 
             <div className="flex min-h-screen">
-
-              {/* Sidebar-ul (Stânga) */}
               <Navigation />
 
-              {/* Zona Principală (Dreapta) */}
               <main className="flex-1 md:ml-64 relative">
-
-                {/* Conținutul Paginii */}
                 {children}
-
-                {/* Footer-ul */}
                 <Footer />
-
               </main>
-
             </div>
           </ThemeProvider>
         </LoadingProvider>

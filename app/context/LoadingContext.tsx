@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 type LoadingContextType = {
     isLoading: boolean;
     setIsLoading: (loading: boolean) => void;
-    hasLoaded: boolean; // To track if the initial load has finished
+    hasLoaded: boolean;
 };
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
@@ -30,7 +30,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 export function useLoading() {
     const context = useContext(LoadingContext);
     if (context === undefined) {
-        throw new Error('useLoading must be used within a LoadingProvider');
+        throw new Error('useLoading trebuie sa fie folosit in interiorul loadingprovider');
     }
     return context;
 }

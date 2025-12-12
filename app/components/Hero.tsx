@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useLoading } from '../context/LoadingContext';
 import Image from 'next/image';
 
-// --- Componenta de Ninsoare (Neschimbată) ---
 const HeroSnow = () => {
     const flakes = Array.from({ length: 30 });
     return (
@@ -53,25 +52,18 @@ export default function Hero() {
     return (
         <section id="hero" className="relative min-h-[90vh] flex items-center justify-center px-4 transition-colors duration-300 pt-24 md:pt-0 overflow-hidden">
 
-            {/* ========================================================= */}
-            {/* ZONA DE IMAGINI BACKGROUND (SISTEMUL CU 4 IMAGINI)        */}
-            {/* ========================================================= */}
-            <div className="absolute inset-0 -z-30 w-full h-full">
+            <div className="absolute inset-0 z-0 w-full h-full">
 
-                {/* 1. LIGHT MODE - MOBILE (9:16) */}
-                {/* Se vede doar pe mobil (md:hidden) și doar pe light (dark:hidden) */}
                 <div className="relative w-full h-full block md:hidden dark:hidden">
                     <Image
                         src="/hero/hero-light-mobile.webp"
                         alt="Hero Background Light Mobile"
                         fill
                         className="object-cover object-center"
-                        priority // Încarcă imaginea prioritar (LCP optimization)
+                        priority
                     />
                 </div>
 
-                {/* 2. LIGHT MODE - DESKTOP (16:9) */}
-                {/* Se vede doar pe desktop (md:block) și doar pe light (dark:hidden) */}
                 <div className="relative w-full h-full hidden md:block dark:hidden">
                     <Image
                         src="/hero/hero-light-desktop.webp"
@@ -82,8 +74,6 @@ export default function Hero() {
                     />
                 </div>
 
-                {/* 3. DARK MODE - MOBILE (9:16) */}
-                {/* Se vede doar pe mobil (md:hidden) și doar pe dark (dark:block) */}
                 <div className="relative w-full h-full hidden dark:block dark:md:hidden">
                     <Image
                         src="/hero/hero-dark-mobile.webp"
@@ -94,8 +84,6 @@ export default function Hero() {
                     />
                 </div>
 
-                {/* 4. DARK MODE - DESKTOP (16:9) */}
-                {/* Se vede doar pe desktop (dark:md:block) */}
                 <div className="relative w-full h-full hidden dark:md:block">
                     <Image
                         src="/hero/hero-dark-desktop.webp"
@@ -107,27 +95,24 @@ export default function Hero() {
                 </div>
             </div>
 
-            {/* OVERLAY PROTECTOR (Gradient) */}
-            {/* Crucial: Fără asta, textul nu se citește peste poze colorate */}
-            <div className="absolute inset-0 bg-linear-to-b from-white/90 via-white/60 to-white dark:from-black/80 dark:via-black/50 dark:to-background -z-20" />
+            <div className="absolute inset-0 z-1 bg-linear-to-b from-white/90 via-white/60 to-white dark:from-black/80 dark:via-black/50 dark:to-background" />
 
-            {/* EFECT DE NINSOARE */}
-            <HeroSnow />
+            <div className="absolute inset-0 pointer-events-none z-2">
+                <HeroSnow />
+            </div>
 
-            {/* Glow Roșu Decorativ (Peste imagine, dar sub text) */}
+
             <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isLoading ? { opacity: 0, scale: 0.8 } : { opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-red-500/10 dark:bg-red-500/5 rounded-full blur-[120px] -z-10"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-red-500/10 dark:bg-red-500/5 rounded-full blur-[120px] z-2"
             ></motion.div>
 
-            {/* ========================================================= */}
-            {/* CONȚINUT TEXT & BUTOANE                                   */}
-            {/* ========================================================= */}
             <div className="text-center max-w-4xl mx-auto relative z-10">
 
-                {/* Badge Marketing */}
+
+
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={isLoading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
@@ -138,7 +123,6 @@ export default function Hero() {
                     <span>Oficial: Lista lui Moșu&apos; e deschisă</span>
                 </motion.div>
 
-                {/* Titlu */}
                 <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
@@ -164,7 +148,6 @@ export default function Hero() {
                     Fără roboți, doar <span className="font-semibold text-foreground">emoție pură</span>.
                 </motion.p>
 
-                {/* Butoane */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
@@ -186,8 +169,8 @@ export default function Hero() {
                         whileTap={{ scale: 0.95 }}
                         className="
                             px-8 py-4 rounded-full font-semibold text-lg transition-all flex items-center gap-2 shadow-sm cursor-pointer
-                            bg-black text-dark hover:bg-gray-800 border-transparent
-                            dark:bg-card dark:text-dark dark:border dark:border-border dark:hover:bg-muted
+                            bg-black text-white hover:bg-gray-800 border-transparent
+                            dark:bg-card dark:text-white dark:border dark:border-border dark:hover:bg-muted
                         "
                     >
                         <PlayCircle className="w-5 h-5 text-red-500" /> Vezi exemplu
