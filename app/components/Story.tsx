@@ -69,7 +69,7 @@ export default function Story() {
                             whileHover={{ y: -10 }}
                             className={`
                                 group relative p-8 rounded-3xl border border-border bg-card/50 backdrop-blur-sm
-                                transition-all duration-300 hover:shadow-2xl ${item.border}
+                                transition-colors duration-300 hover:shadow-2xl ${item.border}
                             `}
                         >
                             <div className={`absolute inset-0 rounded-3xl bg-linear-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />

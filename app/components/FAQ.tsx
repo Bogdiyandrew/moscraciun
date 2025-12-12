@@ -1,7 +1,8 @@
 'use client';
-import { useRef, useState } from 'react';
-import { HelpCircle, Gift, Clock, ShieldCheck, UserCheck, Sparkles } from 'lucide-react';
+import { useRef } from 'react';
+import { HelpCircle, Gift, Clock, ShieldCheck, UserCheck } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+
 const TiltCard = ({ item, index }: { item: any, index: number }) => {
     const ref = useRef<HTMLDivElement>(null);
 
@@ -71,7 +72,7 @@ const TiltCard = ({ item, index }: { item: any, index: number }) => {
             className={`
                 group relative h-full bg-card/80 dark:bg-card/40 backdrop-blur-md 
                 border border-border rounded-2xl p-8 
-                shadow-lg transition-all duration-300 ease-out
+                shadow-lg  transition-colors duration-300 ease-out
                 ${theme.border} ${theme.shadow} hover:shadow-2xl
             `}
         >

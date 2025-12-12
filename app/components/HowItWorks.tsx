@@ -123,9 +123,6 @@ export default function HowItWorks() {
                         <motion.div
                             key={index}
                             variants={itemVariants}
-                            // Am scos whileHover pentru mobile, sau poti folosi media queries in framer daca vrei neaparat,
-                            // dar pentru simplitate si evitare glitch-uri pe touch, whileHover uneori incurca.
-                            // Totusi, daca il pastrezi, conflictul major era transition-all.
                             whileHover={{ y: -10, transition: { duration: 0.3 } }}
                             className={`
                                 group relative overflow-hidden backdrop-blur-sm
@@ -134,8 +131,6 @@ export default function HowItWorks() {
                                 hover:shadow-xl 
                                 transition-shadow duration-300 
                             `}
-                        // NOTA: Am scos 'transition-all duration-500' si am pus 'transition-shadow duration-300'.
-                        // Framer Motion se ocupa de miscare (y, scale), CSS doar de umbra si culori.
                         >
                             <SnowEffect />
 
