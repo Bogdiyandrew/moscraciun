@@ -274,7 +274,7 @@ export default function OrderForm() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm text-muted-foreground ml-1">De îmbunătățit</label>
+                                <label className="text-sm text-muted-foreground ml-1">De îmbunătățit/Fapta rea</label>
                                 <div className="relative">
                                     <ThumbsDown className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                                     <textarea

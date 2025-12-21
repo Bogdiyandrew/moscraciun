@@ -66,7 +66,7 @@ export default function Hero() {
 
                 <div className="relative w-full h-full hidden md:block dark:hidden">
                     <Image
-                        src="/hero/hero-light-desktop.webp"
+                        src="/hero/herobackground.png"
                         alt="Hero Background Light Desktop"
                         fill
                         className="object-cover object-center"

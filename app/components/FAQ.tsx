@@ -136,7 +136,7 @@ export default function FAQ() {
                         Ajutor de la Spiriduși
                     </span>
                     <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
-                        Întrebări Frecvente <HelpCircle className="text-primary hidden md:block" />
+                        Întrebări frecvente <HelpCircle className="text-primary hidden md:block" />
                     </h2>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Tot ce trebuie să știi înainte să comanzi magia.
