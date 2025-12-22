@@ -315,7 +315,7 @@ export default function OrderForm() {
 
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                                 <div className="md:col-span-6 space-y-2">
-                                    <label className="text-sm text-muted-foreground ml-1">Numele Copilului *</label>
+                                    <label className="text-sm text-muted-foreground ml-1">Numele copilului *</label>
                                     <div className="relative">
                                         <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                                         <input
@@ -440,7 +440,7 @@ export default function OrderForm() {
                                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3">
                                     <Camera className="w-6 h-6 text-amber-500 mt-1 shrink-0" />
                                     <div>
-                                        <h4 className="font-bold text-foreground text-sm">Albumul Magic (Inclus în Premium)</h4>
+                                        <h4 className="font-bold text-foreground text-sm">Albumul magic (Inclus în premium)</h4>
                                         <p className="text-xs text-muted-foreground">
                                             Încarcă 1-3 poze cu {formData.child_name || 'copilul'}. Acestea vor apărea scanate holografic în video!
                                         </p>
@@ -470,14 +470,14 @@ export default function OrderForm() {
 
                             <div className="space-y-2 pt-4">
                                 <label className="text-sm text-muted-foreground ml-1 flex items-center gap-2">
-                                    <FileText className="w-4 h-4" /> Note speciale (Pronunție, etc.)
+                                    <FileText className="w-4 h-4" /> Note speciale (pronunție, etc.)
                                 </label>
                                 <textarea
                                     name="notes"
                                     value={formData.notes}
                                     onChange={handleChange}
                                     rows={3}
-                                    placeholder="ex: Numele se pronunță 'MATEI' nu 'MATEI'."
+                                    placeholder="ex: Numele se citește 'A-n-i-a', nu 'A-nia'. Menționați și cățelul Rex."
                                     className="w-full bg-background border border-input rounded-xl py-3 px-4 text-foreground focus:outline-none focus:border-primary transition-colors resize-none"
                                 />
                             </div>
@@ -495,7 +495,7 @@ export default function OrderForm() {
                                     onClick={handleNext}
                                     className="w-2/3 bg-foreground text-background font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-foreground/90 transition-colors shadow-md cursor-pointer"
                                 >
-                                    Spre Plată <ArrowRight className="w-5 h-5" />
+                                    Spre platǎ <ArrowRight className="w-5 h-5" />
                                 </button>
                             </div>
                         </motion.div>
@@ -524,7 +524,7 @@ export default function OrderForm() {
                             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
                                 <CreditCard className="w-5 h-5 text-primary mt-1 shrink-0" />
                                 <div>
-                                    <h4 className="font-bold text-foreground text-sm">Date Facturare</h4>
+                                    <h4 className="font-bold text-foreground text-sm">Date facturare</h4>
                                     <p className="text-xs text-muted-foreground mt-1">
                                         Necesare pentru emiterea facturii fiscale automate.
                                     </p>
@@ -573,7 +573,7 @@ export default function OrderForm() {
                                     className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                                 />
                                 <label htmlFor="is_company" className="text-sm font-medium text-foreground cursor-pointer select-none">
-                                    Factură pe Firmă (Persoană Juridică)
+                                    Facturǎ pe firmǎ (persoana juridicǎ)
                                 </label>
                             </div>
 
@@ -623,7 +623,7 @@ export default function OrderForm() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm text-muted-foreground ml-1">Adresa completă (Stradă, Nr) *</label>
+                                    <label className="text-sm text-muted-foreground ml-1">Adresa completǎ (stradǎ, nr) *</label>
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                                         <input

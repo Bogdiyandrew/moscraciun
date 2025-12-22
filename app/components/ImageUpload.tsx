@@ -64,7 +64,7 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
         <div className="space-y-4">
             <label className="text-sm font-medium text-foreground flex items-center gap-2">
                 <ImageIcon className="w-4 h-4 text-primary" />
-                Încarcă Poze cu Copilul (Max 5)
+                Încarcă poze cu copilul (max. 5)
                 <span className="text-xs text-muted-foreground font-normal ml-auto">
                     Vor apărea în "Albumul Magic"
                 </span>
