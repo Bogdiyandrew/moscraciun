@@ -45,6 +45,9 @@ export default function Hero() {
     const scrollToForm = () => {
         document.getElementById('comanda')?.scrollIntoView({ behavior: 'smooth' });
     };
+    const scrollToDespre = () => {
+        document.getElementById('despre')?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     return (
         <section id="hero" className="relative min-h-[90vh] flex items-center justify-center px-4 transition-colors duration-300 pt-24 md:pt-0 overflow-hidden">
@@ -161,6 +164,7 @@ export default function Hero() {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={scrollToDespre}
                         className="
                             px-8 py-4 rounded-full font-semibold text-lg transition-all flex items-center gap-2 shadow-sm cursor-pointer
                             bg-black text-white hover:bg-gray-800 border-transparent

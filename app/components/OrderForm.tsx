@@ -477,7 +477,7 @@ export default function OrderForm() {
                                     value={formData.notes}
                                     onChange={handleChange}
                                     rows={3}
-                                    placeholder="ex: Numele se citește 'A-n-i-a', nu 'A-nia'. Menționați și cățelul Rex."
+                                    placeholder="ex: Numele se scrie cu 'y' nu cu 'i'. Menționați și cățelul Rex."
                                     className="w-full bg-background border border-input rounded-xl py-3 px-4 text-foreground focus:outline-none focus:border-primary transition-colors resize-none"
                                 />
                             </div>
