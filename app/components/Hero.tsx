@@ -1,7 +1,6 @@
 'use client';
 import { ChevronDown, PlayCircle, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useLoading } from '../context/LoadingContext';
 import Image from 'next/image';
 
 const HeroSnow = () => {
@@ -43,8 +42,6 @@ const HeroSnow = () => {
 };
 
 export default function Hero() {
-    const { isLoading } = useLoading();
-
     const scrollToForm = () => {
         document.getElementById('comanda')?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -101,21 +98,18 @@ export default function Hero() {
                 <HeroSnow />
             </div>
 
-
             <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={isLoading ? { opacity: 0, scale: 0.8 } : { opacity: 1, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-red-500/10 dark:bg-red-500/5 rounded-full blur-[120px] z-2"
             ></motion.div>
 
             <div className="text-center max-w-4xl mx-auto relative z-10">
 
-
-
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isLoading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.8 }}
                     className="inline-flex items-center gap-2 bg-white/80 dark:bg-red-900/40 border border-red-100 dark:border-red-900/50 backdrop-blur-sm px-5 py-2 rounded-full text-sm font-bold text-red-600 dark:text-red-400 mb-8 shadow-sm hover:scale-105 transition-transform cursor-default"
                 >
@@ -125,7 +119,7 @@ export default function Hero() {
 
                 <motion.h1
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
                     className="text-5xl md:text-8xl font-extrabold text-foreground tracking-tight mb-8 drop-shadow-sm"
                 >
@@ -140,7 +134,7 @@ export default function Hero() {
 
                 <motion.p
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
                     className="text-lg md:text-2xl text-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-medium"
                 >
@@ -150,7 +144,7 @@ export default function Hero() {
 
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
                     className="flex flex-col sm:flex-row gap-4 justify-center items-center"
                 >

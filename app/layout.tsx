@@ -5,7 +5,7 @@ import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import { ThemeProvider } from "./components/ThemeProvider";
 import localFont from "next/font/local";
-import WinterLoader from './components/WinterLoader';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +31,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { LoadingProvider } from "./context/LoadingContext";
 
 export default function RootLayout({
   children,
@@ -41,26 +40,23 @@ export default function RootLayout({
   return (
     <html lang="ro" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${myCustomFont.variable} antialiased bg-background text-foreground`}>
-        <LoadingProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <WinterLoader />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
 
-            <div className="flex min-h-screen">
-              <Navigation />
+          <div className="flex min-h-screen">
+            <Navigation />
 
-              <main className="flex-1 md:ml-64 relative">
-                {children}
-                <Footer />
-              </main>
-            </div>
-          </ThemeProvider>
-        </LoadingProvider>
+            <main className="flex-1 md:ml-64 relative">
+              {children}
+              <Footer />
+            </main>
+          </div>
+        </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }

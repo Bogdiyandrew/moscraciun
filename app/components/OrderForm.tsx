@@ -21,21 +21,27 @@ import {
     X,
     CreditCard,
     MapPin,
-    Building2
+    Building2,
+    Shield,
+    Zap,
+    Check
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
-// Definim tipurile extinse pentru a include datele de facturare
+// Definim tipurile extinse
 type FormData = {
+    // Pachet
+    package: 'standard' | 'premium';
+
     // Date Copil
     child_name: string;
     age: string;
-    gender: 'boy' | 'girl'; // Adăugat pentru corectitudine gramaticală în video
+    gender: 'boy' | 'girl';
     good_deed: string;
     bad_deed: string;
     secret_detail: string;
     wish: string;
-    
+
     // Media
     notes: string;
     images: string[];
@@ -43,16 +49,17 @@ type FormData = {
     // Contact & Facturare
     parent_email: string;
     phone: string;
-    billing_name: string; // Numele de pe factură (Părinte sau Firmă)
+    billing_name: string;
     billing_address: string;
     billing_city: string;
     billing_county: string;
-    is_company: boolean; // Toggle pentru firmă
-    company_cui?: string; // Opțional, doar dacă e firmă
-    company_reg_com?: string; // Opțional
+    is_company: boolean;
+    company_cui?: string;
+    company_reg_com?: string;
 };
 
 const initialData: FormData = {
+    package: 'premium', // Default pe Premium pentru upsell
     child_name: '',
     age: '',
     gender: 'boy',
@@ -74,7 +81,6 @@ const initialData: FormData = {
 };
 
 export default function OrderForm() {
-    // Folosim pași întregi: 1, 2, 3
     const [step, setStep] = useState<number>(1);
     const [formData, setFormData] = useState<FormData>(initialData);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,15 +89,19 @@ export default function OrderForm() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
-        
+
         if (type === 'checkbox') {
-             const checked = (e.target as HTMLInputElement).checked;
-             setFormData(prev => ({ ...prev, [name]: checked }));
+            const checked = (e.target as HTMLInputElement).checked;
+            setFormData(prev => ({ ...prev, [name]: checked }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
-        
+
         if (validationError) setValidationError(null);
+    };
+
+    const handlePackageSelect = (pkg: 'standard' | 'premium') => {
+        setFormData(prev => ({ ...prev, package: pkg }));
     };
 
     const handleNext = () => {
@@ -110,7 +120,6 @@ export default function OrderForm() {
         setStep(prev => prev - 1);
     };
 
-    // Calculăm progresul matematic corect
     const getProgressWidth = () => {
         return `${(step / 3) * 100}%`;
     };
@@ -118,7 +127,6 @@ export default function OrderForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validare finală pentru facturare
         if (!formData.parent_email || !formData.billing_name || !formData.billing_address || !formData.billing_city) {
             setValidationError("Te rugăm să completezi toate datele de facturare obligatorii!");
             return;
@@ -132,14 +140,12 @@ export default function OrderForm() {
         setIsSubmitting(true);
 
         try {
-            // Aici vei integra apelul către Stripe mai târziu
-            // Momentan salvăm comanda ca "Pending Payment"
-            
             const { error } = await supabase
                 .from('orders')
                 .insert([{
                     ...formData,
-                    status: 'pending_payment', // status inițial
+                    status: 'pending_payment',
+                    amount: formData.package === 'premium' ? 89 : 49, // Salvăm și suma
                     created_at: new Date().toISOString()
                 }]);
 
@@ -168,8 +174,9 @@ export default function OrderForm() {
                 </div>
                 <h2 className="text-3xl font-bold text-foreground mb-4">Comandă Inițiată!</h2>
                 <p className="text-muted-foreground mb-8">
-                    Datele pentru <strong>{formData.child_name}</strong> au fost salvate.<br />
-                    (Aici va apărea redirecționarea către Stripe pentru plată).
+                    Pachetul <strong>{formData.package === 'premium' ? 'AGENT SECRET' : 'SCUTUL MAGIC'}</strong> pentru <strong>{formData.child_name}</strong> a fost salvat.
+                    <br /><br />
+                    Total de plată: <span className="text-foreground font-bold">{formData.package === 'premium' ? '89 RON' : '49 RON'}</span>
                 </p>
                 <button
                     onClick={() => window.location.reload()}
@@ -186,10 +193,8 @@ export default function OrderForm() {
             id="comanda"
             className="w-full max-w-2xl mx-auto bg-card border border-border rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden transition-colors duration-300 scroll-mt-24"
         >
-            {/* Background Ambient */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
 
-            {/* Error Toast */}
             <AnimatePresence>
                 {validationError && (
                     <motion.div
@@ -228,11 +233,10 @@ export default function OrderForm() {
                 )}
             </AnimatePresence>
 
-            {/* Header Steps */}
             <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl md:text-2xl font-bold text-foreground">
-                        {step === 1 && 'Pasul 1: Despre copil'}
+                        {step === 1 && 'Pasul 1: Misiune & Copil'}
                         {step === 2 && 'Pasul 2: Magie vizuală'}
                         {step === 3 && 'Pasul 3: Facturare'}
                     </h2>
@@ -253,7 +257,7 @@ export default function OrderForm() {
             <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={step}>
 
-                    {/* --- PASUL 1: DATE COPIL --- */}
+                    {/* --- PASUL 1: PACHET & DATE COPIL --- */}
                     {step === 1 && (
                         <motion.div
                             key="step1"
@@ -263,8 +267,56 @@ export default function OrderForm() {
                             exit="exit"
                             custom={1}
                             transition={{ duration: 0.3 }}
-                            className="space-y-5"
+                            className="space-y-6"
                         >
+                            {/* SELECȚIE PACHET */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div
+                                    onClick={() => handlePackageSelect('standard')}
+                                    className={`
+                                        relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
+                                        ${formData.package === 'standard'
+                                            ? 'border-blue-500 bg-blue-500/5 shadow-lg shadow-blue-500/10'
+                                            : 'border-border hover:border-blue-300 opacity-70 hover:opacity-100'}
+                                    `}
+                                >
+                                    {formData.package === 'standard' && (
+                                        <div className="absolute top-2 right-2 text-blue-500"><CheckCircle className="w-5 h-5" /></div>
+                                    )}
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Shield className={`w-5 h-5 ${formData.package === 'standard' ? 'text-blue-500' : 'text-muted-foreground'}`} />
+                                        <h3 className="font-bold text-foreground">Scutul Magic</h3>
+                                    </div>
+                                    <p className="text-2xl font-bold text-foreground mb-1">49 RON</p>
+                                    <p className="text-xs text-muted-foreground">Video HD • Mesaj Standard</p>
+                                </div>
+
+                                <div
+                                    onClick={() => handlePackageSelect('premium')}
+                                    className={`
+                                        relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
+                                        ${formData.package === 'premium'
+                                            ? 'border-amber-500 bg-amber-500/5 shadow-lg shadow-amber-500/20'
+                                            : 'border-border hover:border-amber-300 opacity-70 hover:opacity-100'}
+                                    `}
+                                >
+                                    {formData.package === 'premium' && (
+                                        <div className="absolute top-2 right-2 text-amber-500"><CheckCircle className="w-5 h-5" /></div>
+                                    )}
+                                    <div className="absolute -top-3 left-4 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                        RECOMANDAT
+                                    </div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Zap className={`w-5 h-5 ${formData.package === 'premium' ? 'text-amber-500' : 'text-muted-foreground'}`} />
+                                        <h3 className="font-bold text-foreground">Agent Secret</h3>
+                                    </div>
+                                    <p className="text-2xl font-bold text-foreground mb-1">89 RON</p>
+                                    <p className="text-xs text-muted-foreground">Video 4K • 📸 Poza Copilului • 📜 Diplomă</p>
+                                </div>
+                            </div>
+
+                            <hr className="border-border/40" />
+
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                                 <div className="md:col-span-6 space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">Numele Copilului *</label>
@@ -280,7 +332,7 @@ export default function OrderForm() {
                                         />
                                     </div>
                                 </div>
-                                
+
                                 <div className="md:col-span-3 space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">Vârsta *</label>
                                     <div className="relative">
@@ -389,17 +441,41 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 flex gap-3">
-                                <Camera className="w-6 h-6 text-primary mt-1 shrink-0" />
-                                <div>
-                                    <h4 className="font-bold text-foreground text-sm">Albumul Magic (Opțional)</h4>
-                                    <p className="text-xs text-muted-foreground">
-                                        Încarcă 1-3 poze cu {formData.child_name || 'copilul'} pentru a apărea pe tableta Moșului.
-                                    </p>
+                            {/* Mesaj condiționat în funcție de pachet */}
+                            {formData.package === 'premium' ? (
+                                <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3">
+                                    <Camera className="w-6 h-6 text-amber-500 mt-1 shrink-0" />
+                                    <div>
+                                        <h4 className="font-bold text-foreground text-sm">Albumul Magic (Inclus în Premium)</h4>
+                                        <p className="text-xs text-muted-foreground">
+                                            Încarcă 1-3 poze cu {formData.child_name || 'copilul'}. Acestea vor apărea scanate holografic în video!
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 flex gap-3 opacity-80">
+                                    <Shield className="w-6 h-6 text-blue-500 mt-1 shrink-0" />
+                                    <div>
+                                        <h4 className="font-bold text-foreground text-sm">Pachet Standard</h4>
+                                        <p className="text-xs text-muted-foreground">
+                                            Ai ales pachetul Standard (fără poze în video).
+                                            <span
+                                                onClick={() => setStep(1)}
+                                                className="underline cursor-pointer font-bold ml-1 hover:text-blue-600"
+                                            >
+                                                Treci la Premium pentru a adăuga poze?
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
 
-                            <ImageUpload onUploadComplete={(urls) => setFormData(prev => ({ ...prev, images: urls }))} />
+                            {/* Upload-ul apare doar la Premium, sau îl lăsăm opțional și la standard dar nu îl folosim? 
+                                Strategie: Îl arătăm DOAR la Premium ca să fie clar diferența. */}
+
+                            {formData.package === 'premium' && (
+                                <ImageUpload onUploadComplete={(urls) => setFormData(prev => ({ ...prev, images: urls }))} />
+                            )}
 
                             <div className="space-y-2 pt-4">
                                 <label className="text-sm text-muted-foreground ml-1 flex items-center gap-2">
@@ -446,6 +522,16 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
+                            {/* Rezumat Comandă */}
+                            <div className={`border rounded-xl p-4 flex justify-between items-center ${formData.package === 'premium' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-blue-500/10 border-blue-500/20'}`}>
+                                <div>
+                                    <p className="text-xs text-muted-foreground uppercase font-bold">Total de plată</p>
+                                    <p className="text-xl font-bold text-foreground">{formData.package === 'premium' ? '89 RON' : '49 RON'}</p>
+                                    <p className="text-xs opacity-70">Pachet {formData.package === 'premium' ? 'Agent Secret' : 'Scutul Magic'}</p>
+                                </div>
+                                <CreditCard className={`w-8 h-8 ${formData.package === 'premium' ? 'text-amber-500' : 'text-blue-500'}`} />
+                            </div>
+
                             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
                                 <CreditCard className="w-5 h-5 text-primary mt-1 shrink-0" />
                                 <div>
@@ -615,7 +701,7 @@ export default function OrderForm() {
                                         </>
                                     ) : (
                                         <>
-                                            Plătește Comanda <CheckCircle className="w-5 h-5" />
+                                            Plătește {formData.package === 'premium' ? '89' : '49'} RON <CheckCircle className="w-5 h-5" />
                                         </>
                                     )}
                                 </button>

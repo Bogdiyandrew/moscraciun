@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+// 1. Importăm createPortal
+import { createPortal } from 'react-dom';
 import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles, SendHorizontal } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,6 +20,18 @@ export default function Navigation() {
         setMounted(true);
     }, []);
 
+    // Blocare scroll când meniul este deschis
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [mobileMenuOpen]);
+
     const scrollToSection = (id: string) => {
         setMobileMenuOpen(false);
         if (pathname !== '/') {
@@ -27,7 +40,10 @@ export default function Navigation() {
         }
         const element = document.getElementById(id);
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            // Mic delay pentru a permite închiderea meniului înainte de scroll
+            setTimeout(() => {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
         }
     };
 
@@ -73,10 +89,10 @@ export default function Navigation() {
                 variants={sidebarVariants}
                 className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 z-50 bg-card/80 dark:bg-card/40 backdrop-blur-xl border-r border-border h-screen transition-colors duration-300 shadow-2xl"
             >
+                {/* ... (Conținutul Desktop Sidebar a rămas neschimbat) ... */}
                 <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-primary/5 to-transparent pointer-events-none" />
 
                 <div className="p-6 border-b border-border/50 flex items-center gap-3 relative z-10">
-                    {/* LOGO DESKTOP */}
                     <motion.div
                         whileHover={{ rotate: 10, scale: 1.1 }}
                         onClick={handleLogoClick}
@@ -109,7 +125,6 @@ export default function Navigation() {
                             className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-primary transition-all text-sm font-medium group relative overflow-hidden cursor-pointer"
                         >
                             <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center rounded-full" />
-
                             <span className="group-hover:text-primary transition-colors relative z-10 group-hover:scale-110 duration-200">
                                 {item.icon}
                             </span>
@@ -133,7 +148,6 @@ export default function Navigation() {
                                 transition={{ duration: 0.3 }}
                                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                                 className="p-2 rounded-full hover:bg-muted transition-colors text-foreground cursor-pointer border border-transparent hover:border-border"
-                                aria-label="Schimbă tema"
                             >
                                 {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-400" />}
                             </motion.button>
@@ -152,7 +166,6 @@ export default function Navigation() {
                             transition-all cursor-pointer relative overflow-hidden
                         "
                     >
-                        <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-linear-to-r from-transparent to-white opacity-20 hover:animate-shine" />
                         <SendHorizontal className="w-4 h-4 relative z-10" />
                         <span className="relative z-10">Comandă video</span>
                     </motion.button>
@@ -162,9 +175,7 @@ export default function Navigation() {
             {/* --- MOBILE HEADER --- */}
             <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-lg border-b border-border/50 transition-colors duration-300">
                 <div className="px-4 h-16 flex items-center justify-between">
-
                     <div onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
-                        {/* LOGO MOBILE */}
                         <motion.div
                             whileTap={{ scale: 0.9 }}
                             className="bg-primary p-1.5 rounded-lg shadow-sm flex items-center justify-center"
@@ -181,7 +192,6 @@ export default function Navigation() {
                             Biroul<span className="text-primary">Mosului</span>
                         </span>
                     </div>
-
 
                     <div className="flex items-center gap-2">
                         {mounted && (
@@ -204,66 +214,78 @@ export default function Navigation() {
                 </div>
             </header>
 
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden cursor-pointer"
-                            style={{ zIndex: 9990 }}
-                        />
+            {/* --- MODIFICAREA CRITICĂ AICI --- 
+               Folosim createPortal pentru a muta meniul la finalul <body>
+               astfel încât să nu fie afectat de GSAP transforms.
+            */}
+            {mounted && createPortal(
+                <AnimatePresence mode="wait">
+                    {mobileMenuOpen && (
+                        <>
+                            {/* Backdrop */}
+                            <motion.div
+                                key="mobile-backdrop"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden cursor-pointer"
+                                style={{ zIndex: 9998 }} // Z-index mare
+                            />
 
-                        <motion.div
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border shadow-2xl flex flex-col overflow-y-auto md:hidden"
-                            style={{ zIndex: 9999 }}
-                        >
-                            <div className="p-4 flex items-center justify-between border-b border-border">
-                                <span className="font-bold text-lg">Meniu</span>
-                                <button
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="p-2 hover:bg-muted rounded-full transition-colors cursor-pointer"
-                                >
-                                    <X className="w-6 h-6" />
-                                </button>
-                            </div>
-
-                            <div className="p-4 flex flex-col gap-2">
-                                {navItems.map((item, index) => (
-                                    <motion.button
-                                        key={item.id}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.1 + index * 0.1 }}
-                                        onClick={() => scrollToSection(item.id)}
-                                        className="flex items-center gap-3 px-4 py-4 rounded-xl text-foreground hover:bg-muted active:scale-95 transition-all text-left font-medium cursor-pointer"
+                            {/* Sidebar Meniu */}
+                            <motion.div
+                                key="mobile-menu"
+                                initial={{ x: '100%' }}
+                                animate={{ x: 0 }}
+                                exit={{ x: '100%' }}
+                                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border shadow-2xl flex flex-col overflow-y-auto md:hidden"
+                                style={{ zIndex: 9999 }} // Z-index foarte mare
+                            >
+                                <div className="p-4 flex items-center justify-between border-b border-border">
+                                    <span className="font-bold text-lg">Meniu</span>
+                                    <button
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="p-2 hover:bg-muted rounded-full transition-colors cursor-pointer"
                                     >
-                                        <span className="text-primary bg-primary/10 p-2 rounded-lg">{item.icon}</span>
-                                        {item.name}
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
+
+                                <div className="p-4 flex flex-col gap-2">
+                                    {navItems.map((item, index) => (
+                                        <motion.button
+                                            key={item.id}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.1 + index * 0.1 }}
+                                            onClick={() => scrollToSection(item.id)}
+                                            className="flex items-center gap-3 px-4 py-4 rounded-xl text-foreground hover:bg-muted active:scale-95 transition-all text-left font-medium cursor-pointer"
+                                        >
+                                            <span className="text-primary bg-primary/10 p-2 rounded-lg">{item.icon}</span>
+                                            {item.name}
+                                        </motion.button>
+                                    ))}
+                                    <div className="h-px bg-border my-4"></div>
+                                    <motion.button
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.4 }}
+                                        onClick={() => scrollToSection('comanda')}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="bg-primary text-white py-4 rounded-xl font-bold text-center mt-2 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 cursor-pointer"
+                                    >
+                                        <Send className="w-5 h-5" /> Comandă mesaj video
                                     </motion.button>
-                                ))}
-                                <div className="h-px bg-border my-4"></div>
-                                <motion.button
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.4 }}
-                                    onClick={() => scrollToSection('comanda')}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="bg-primary text-white py-4 rounded-xl font-bold text-center mt-2 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 cursor-pointer"
-                                >
-                                    <Send className="w-5 h-5" /> Comandă mesaj video
-                                </motion.button>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>,
+                document.body // Ținta portalului
+            )}
         </>
     );
 }
