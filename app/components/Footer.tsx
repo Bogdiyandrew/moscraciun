@@ -1,12 +1,10 @@
 'use client';
 
-// 1. Eliminăm Instagram de aici
 import { Heart, Facebook, Mail, Snowflake } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-
-// 2. Importăm FontAwesome și iconița de TikTok
+// Importurile necesare pentru TikTok
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTiktok } from '@fortawesome/free-brands-svg-icons';
 
@@ -34,6 +32,7 @@ export default function Footer() {
             </div>
 
             <div className="relative bg-card/50 dark:bg-card/30 backdrop-blur-lg border-t border-border pt-16 pb-8 overflow-hidden">
+
                 <div className="absolute bottom-0 left-1/4 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
                 <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
@@ -45,8 +44,8 @@ export default function Footer() {
                         transition={{ duration: 0.6 }}
                         className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16"
                     >
-                        <div className="col-span-1 md:col-span-2 space-y-6">
 
+                        <div className="col-span-1 md:col-span-2 space-y-6">
                             <Link href="/" className="flex items-center gap-2 group w-fit">
                                 <div className="bg-primary p-2.5 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300 flex items-center justify-center">
                                     <Image
@@ -67,17 +66,15 @@ export default function Footer() {
                             </p>
 
                             <div className="flex items-center gap-4 pt-2">
-                                <motion.a whileHover={{ scale: 1.1 }} href="#" className="bg-background border border-border p-2 rounded-full hover:border-primary hover:text-primary transition-colors">
+                                <motion.a whileHover={{ scale: 1.1 }} href="#" className="bg-background border border-border p-2 rounded-full hover:border-primary hover:text-primary transition-colors flex items-center justify-center">
                                     <Facebook className="w-5 h-5" />
                                 </motion.a>
-
-
                                 <motion.a whileHover={{ scale: 1.1 }} href="#" className="bg-background border border-border p-2 rounded-full hover:border-primary hover:text-primary transition-colors flex items-center justify-center">
+                                    {/* Iconița de TikTok adăugată aici */}
                                     <FontAwesomeIcon icon={faTiktok} className="w-5 h-5" />
                                 </motion.a>
                             </div>
                         </div>
-
 
                         <div>
                             <h3 className="font-bold text-foreground mb-6">Exploarează</h3>
@@ -108,23 +105,44 @@ export default function Footer() {
                         </div>
                     </motion.div>
 
-
                     <div className="border-t border-border/50 py-8">
                         <div className="flex flex-wrap justify-center md:justify-start gap-6 opacity-80 hover:opacity-100 transition-opacity">
-                            <a href="http://www.anpc.ro/categorie/557/sal" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition-transform duration-300 grayscale hover:grayscale-0">
-                                <img src="https://etamade-com.github.io/anpc-sal-sol-logo/anpc-sal.svg" alt="Logo SAL" className="h-[25px] md:h-[30px] w-auto" />
+                            <a
+                                href="http://www.anpc.ro/categorie/557/sal"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:scale-105 transition-transform duration-300 grayscale hover:grayscale-0"
+                            >
+                                <img
+                                    src="https://etamade-com.github.io/anpc-sal-sol-logo/anpc-sal.svg"
+                                    alt="Logo SAL"
+                                    className="h-[25px] md:h-[30px] w-auto"
+                                />
                             </a>
-                            <a href="https://webgate.ec.europa.eu/odr/main/index.cfm?event=main.home.show&lng=RO" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition-transform duration-300 grayscale hover:grayscale-0">
-                                <img src="https://etamade-com.github.io/anpc-sal-sol-logo/anpc-sol.svg" alt="Logo SOL" className="h-[25px] md:h-[30px] w-auto" />
+                            <a
+                                href="https://webgate.ec.europa.eu/odr/main/index.cfm?event=main.home.show&lng=RO"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:scale-105 transition-transform duration-300 grayscale hover:grayscale-0"
+                            >
+                                <img
+                                    src="https://etamade-com.github.io/anpc-sal-sol-logo/anpc-sol.svg"
+                                    alt="Logo SOL"
+                                    className="h-[25px] md:h-[30px] w-auto"
+                                />
                             </a>
                         </div>
                     </div>
 
                     <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
                         <p>© {currentYear} BiroulMosului.ro. Toate drepturile rezervate.</p>
+
                         <div className="flex items-center gap-2 bg-background/50 px-3 py-1 rounded-full border border-border/50">
                             <span>Făcut cu</span>
-                            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ repeat: Infinity, duration: 2 }}
+                            >
                                 <Heart className="w-3 h-3 text-red-500 fill-red-500" />
                             </motion.div>
                             <span>în România</span>
