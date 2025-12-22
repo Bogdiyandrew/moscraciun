@@ -1,5 +1,5 @@
 'use client';
-import { ChevronDown, PlayCircle, Star } from 'lucide-react';
+import { HandCoins, BadgeInfo, Snowflake } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -113,7 +113,7 @@ export default function Hero() {
                     transition={{ delay: 0.2, duration: 0.8 }}
                     className="inline-flex items-center gap-2 bg-white/80 dark:bg-red-900/40 border border-red-100 dark:border-red-900/50 backdrop-blur-sm px-5 py-2 rounded-full text-sm font-bold text-red-600 dark:text-red-400 mb-8 shadow-sm hover:scale-105 transition-transform cursor-default"
                 >
-                    <Star className="w-4 h-4 fill-current animate-[spin_3s_linear_infinite]" />
+                    <Snowflake className="w-4 h-4 fill-current animate-[spin_3s_linear_infinite]" />
                     <span>Oficial: Lista lui Moșu&apos; e deschisă</span>
                 </motion.div>
 
@@ -154,7 +154,7 @@ export default function Hero() {
                         onClick={scrollToForm}
                         className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold text-lg transition-all shadow-[0_0_30px_-5px_rgba(220,38,38,0.4)] hover:shadow-red-600/50 flex items-center gap-2 cursor-pointer relative overflow-hidden group"
                     >
-                        <span className="relative z-10 flex items-center gap-2">Comandă <ChevronDown className="w-5 h-5" /></span>
+                        <span className="relative z-10 flex items-center gap-2">Comandă <HandCoins className="w-5 h-5" /></span>
                         <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-linear-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
                     </motion.button>
 
@@ -167,7 +167,7 @@ export default function Hero() {
                             dark:bg-card dark:text-white dark:border dark:border-border dark:hover:bg-muted
                         "
                     >
-                        <PlayCircle className="w-5 h-5 text-red-500" /> Vezi exemplu
+                        <BadgeInfo className="w-5 h-5 text-red-500" /> Vezi detalii
                     </motion.button>
                 </motion.div>
             </div>
