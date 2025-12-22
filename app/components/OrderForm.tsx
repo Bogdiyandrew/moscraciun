@@ -28,12 +28,11 @@ import {
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
-// Definim tipurile extinse
 type FormData = {
-    // Pachet
+
     package: 'standard' | 'premium';
 
-    // Date Copil
+
     child_name: string;
     age: string;
     gender: 'boy' | 'girl';
@@ -42,11 +41,11 @@ type FormData = {
     secret_detail: string;
     wish: string;
 
-    // Media
+
     notes: string;
     images: string[];
 
-    // Contact & Facturare
+
     parent_email: string;
     phone: string;
     billing_name: string;
@@ -59,7 +58,7 @@ type FormData = {
 };
 
 const initialData: FormData = {
-    package: 'premium', // Default pe Premium pentru upsell
+    package: 'premium',
     child_name: '',
     age: '',
     gender: 'boy',
@@ -257,7 +256,7 @@ export default function OrderForm() {
             <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={step}>
 
-                    {/* --- PASUL 1: PACHET & DATE COPIL --- */}
+
                     {step === 1 && (
                         <motion.div
                             key="step1"
@@ -269,7 +268,7 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            {/* SELECȚIE PACHET */}
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div
                                     onClick={() => handlePackageSelect('standard')}
@@ -429,7 +428,7 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-                    {/* --- PASUL 2: MEDIA --- */}
+
                     {step === 2 && (
                         <motion.div
                             key="step2"
@@ -441,7 +440,7 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            {/* Mesaj condiționat în funcție de pachet */}
+
                             {formData.package === 'premium' ? (
                                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3">
                                     <Camera className="w-6 h-6 text-amber-500 mt-1 shrink-0" />
@@ -470,8 +469,7 @@ export default function OrderForm() {
                                 </div>
                             )}
 
-                            {/* Upload-ul apare doar la Premium, sau îl lăsăm opțional și la standard dar nu îl folosim? 
-                                Strategie: Îl arătăm DOAR la Premium ca să fie clar diferența. */}
+
 
                             {formData.package === 'premium' && (
                                 <ImageUpload onUploadComplete={(urls) => setFormData(prev => ({ ...prev, images: urls }))} />
@@ -510,7 +508,7 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-                    {/* --- PASUL 3: FACTURARE & CONTACT --- */}
+
                     {step === 3 && (
                         <motion.div
                             key="step3"
@@ -522,7 +520,7 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            {/* Rezumat Comandă */}
+
                             <div className={`border rounded-xl p-4 flex justify-between items-center ${formData.package === 'premium' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-blue-500/10 border-blue-500/20'}`}>
                                 <div>
                                     <p className="text-xs text-muted-foreground uppercase font-bold">Total de plată</p>
@@ -542,7 +540,7 @@ export default function OrderForm() {
                                 </div>
                             </div>
 
-                            {/* Contact Info */}
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">Email (unde trimitem video) *</label>
@@ -575,7 +573,7 @@ export default function OrderForm() {
 
                             <hr className="border-border/50" />
 
-                            {/* Toggle Persoana Juridica */}
+
                             <div className="flex items-center gap-2">
                                 <input
                                     type="checkbox"
@@ -590,7 +588,7 @@ export default function OrderForm() {
                                 </label>
                             </div>
 
-                            {/* Billing Fields */}
+
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">
@@ -651,7 +649,7 @@ export default function OrderForm() {
                                     </div>
                                 </div>
 
-                                {/* Fields only for Company */}
+
                                 {formData.is_company && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                                         <div className="space-y-2">
