@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-// Am păstrat Gift în importuri deoarece este folosit în lista de navItems mai jos
 import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles, SendHorizontal } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
-import Image from 'next/image'; // Import necesar pentru a afișa SVG-ul
+import Image from 'next/image';
 
 export default function Navigation() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
