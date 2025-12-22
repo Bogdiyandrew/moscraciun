@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
-// ... (Restul tipurilor FormData rămân la fel) ...
 type FormData = {
     package: 'standard' | 'premium';
     child_name: string;
@@ -62,10 +61,7 @@ export default function OrderForm() {
     const [step, setStep] = useState<number>(1);
     const [formData, setFormData] = useState<FormData>(initialData);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // !!! REINTRODUCEM STAREA DE SUCCES PENTRU MODUL FĂRĂ PLATĂ !!!
     const [isSuccess, setIsSuccess] = useState(false);
-
     const [validationError, setValidationError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -103,7 +99,7 @@ export default function OrderForm() {
         return `${(step / 3) * 100}%`;
     };
 
-    // --- FUNCȚIA DE SUBMIT MODIFICATĂ (FĂRĂ STRIPE) ---
+    // --- FUNCȚIA DE SUBMIT (FĂRĂ SCROLL) ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -124,23 +120,42 @@ export default function OrderForm() {
         setIsSubmitting(true);
 
         try {
-            // 1. DOAR SALVĂM ÎN BAZA DE DATE
+            // 1. SALVĂM ÎN BAZA DE DATE (Supabase)
             const { error } = await supabase
                 .from('orders')
                 .insert([{
                     ...formData,
-                    status: 'pending_payment', // Rămâne pending, dar apare în admin
+                    status: 'pending_payment',
                     amount: formData.package === 'premium' ? 89 : 49,
                     created_at: new Date().toISOString()
                 }]);
 
             if (error) throw error;
 
-            // 2. NU MAI CHEMARE API STRIPE -> AFIȘĂM SUCCES LOCAL
-            setIsSuccess(true);
+            // ---------------------------------------------------------
+            // 2. TRIMITEM EMAILUL DE CONFIRMARE (Prin Resend)
+            // ---------------------------------------------------------
+            try {
+                await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: formData.parent_email,
+                        childName: formData.child_name,
+                        packageName: formData.package === 'premium' ? 'Agent Secret' : 'Scutul Magic',
+                        price: formData.package === 'premium' ? 89 : 49,
+                    }),
+                });
+            } catch (emailError) {
+                console.error("Eroare la trimiterea emailului:", emailError);
+            }
+            // ---------------------------------------------------------
 
-            // Opțional: Resetăm formularul sau scroll sus
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 3. AFIȘĂM SUCCES LOCAL (FĂRĂ SCROLL SUS)
+            setIsSuccess(true);
+            // Am șters linia: window.scrollTo(...)
 
         } catch (error: any) {
             console.error('Eroare Supabase:', error);
@@ -156,7 +171,7 @@ export default function OrderForm() {
         exit: (direction: number) => ({ x: direction < 0 ? 50 : -50, opacity: 0 }),
     };
 
-    // --- UI PENTRU SUCCES (AFISAT DUPĂ TRIMITERE) ---
+    // --- UI PENTRU SUCCES ---
     if (isSuccess) {
         return (
             <div className="w-full max-w-2xl mx-auto bg-card border border-green-500/30 rounded-3xl p-10 shadow-2xl text-center my-10 animate-in fade-in zoom-in duration-500">
@@ -167,9 +182,9 @@ export default function OrderForm() {
                 <p className="text-muted-foreground mb-8">
                     Pachetul <strong>{formData.package === 'premium' ? 'AGENT SECRET' : 'SCUTUL MAGIC'}</strong> pentru <strong>{formData.child_name}</strong> a fost salvat cu succes.
                     <br /><br />
-                    Deoarece suntem în modul de testare, plata nu a fost cerută.
+                    Un email de confirmare a fost trimis către <strong>{formData.parent_email}</strong>.
                     <br />
-                    Verifică pagina de <strong>Admin</strong> pentru a vedea comanda!
+                    Deoarece suntem în modul de testare, plata nu a fost cerută.
                 </p>
                 <button
                     onClick={() => window.location.reload()}
@@ -180,9 +195,6 @@ export default function OrderForm() {
             </div>
         );
     }
-
-    // ... (Restul return-ului cu formularul rămâne neschimbat, doar handleSubmit-ul de mai sus se schimbă) ...
-    // Asigură-te că pui tot conținutul de la <section> ... </section> aici.
 
     return (
         <section
@@ -252,9 +264,6 @@ export default function OrderForm() {
 
             <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={step}>
-                    {/* ... AICI VINE CONȚINUTUL PASILOR 1, 2, 3 
-                        (Este identic cu codul anterior, nu trebuie să schimbi nimic în interiorul <form> decât dacă lipsește ceva)
-                     */}
 
                     {/* --- PASUL 1: PACHET & DATE COPIL --- */}
                     {step === 1 && (
@@ -440,7 +449,6 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            {/* Mesaj condiționat în funcție de pachet */}
                             {formData.package === 'premium' ? (
                                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3">
                                     <Camera className="w-6 h-6 text-amber-500 mt-1 shrink-0" />
@@ -714,7 +722,7 @@ export default function OrderForm() {
                                         </>
                                     ) : (
                                         <>
-                                            Trimite Comanda (Test) <CheckCircle className="w-5 h-5" />
+                                            Trimite comanda (test) <CheckCircle className="w-5 h-5" />
                                         </>
                                     )}
                                 </button>
