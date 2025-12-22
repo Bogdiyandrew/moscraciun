@@ -49,7 +49,7 @@ export default function HowItWorks() {
 
     return (
         <section id="despre" className="py-24 bg-background px-4 overflow-hidden relative">
-            {/* Background Ambient */}
+
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
                 <div className="absolute top-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
                 <div className="absolute bottom-20 left-10 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
@@ -85,9 +85,7 @@ export default function HowItWorks() {
                             `}
                         >
                             {pkg.popular && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg shadow-amber-500/20 whitespace-nowrap">
-                                    <Sparkles className="w-3 h-3 fill-white" /> Cel mai ales de părinți
-                                </div>
+                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg shadow-amber-500/20 whitespace-nowrap">Cel mai ales de părinți</div>
                             )}
 
                             <div className="mb-6">
@@ -120,7 +118,7 @@ export default function HowItWorks() {
                                 ))}
                             </ul>
 
-                            {/* Aici am adaugat motion.button cu whileHover si whileTap */}
+
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -131,7 +129,7 @@ export default function HowItWorks() {
                                     ${pkg.buttonColor}
                                 `}
                             >
-                                {pkg.popular && <Star className="w-4 h-4 fill-white" />}
+                                {pkg.popular}
                                 Alege {pkg.name}
                             </motion.button>
                         </motion.div>
