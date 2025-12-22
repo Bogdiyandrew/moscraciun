@@ -99,11 +99,9 @@ export default function OrderForm() {
         return `${(step / 3) * 100}%`;
     };
 
-    // --- FUNCȚIA DE SUBMIT (FĂRĂ SCROLL) ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validări
         if (!formData.parent_email || !formData.billing_name || !formData.billing_address || !formData.billing_city) {
             setValidationError("Te rugăm să completezi toate datele de facturare obligatorii!");
             return;
@@ -120,7 +118,6 @@ export default function OrderForm() {
         setIsSubmitting(true);
 
         try {
-            // 1. SALVĂM ÎN BAZA DE DATE (Supabase)
             const { error } = await supabase
                 .from('orders')
                 .insert([{
@@ -132,9 +129,6 @@ export default function OrderForm() {
 
             if (error) throw error;
 
-            // ---------------------------------------------------------
-            // 2. TRIMITEM EMAILUL DE CONFIRMARE (Prin Resend)
-            // ---------------------------------------------------------
             try {
                 await fetch('/api/send-email', {
                     method: 'POST',
@@ -151,11 +145,8 @@ export default function OrderForm() {
             } catch (emailError) {
                 console.error("Eroare la trimiterea emailului:", emailError);
             }
-            // ---------------------------------------------------------
 
-            // 3. AFIȘĂM SUCCES LOCAL (FĂRĂ SCROLL SUS)
             setIsSuccess(true);
-            // Am șters linia: window.scrollTo(...)
 
         } catch (error: any) {
             console.error('Eroare Supabase:', error);
@@ -171,7 +162,6 @@ export default function OrderForm() {
         exit: (direction: number) => ({ x: direction < 0 ? 50 : -50, opacity: 0 }),
     };
 
-    // --- UI PENTRU SUCCES ---
     if (isSuccess) {
         return (
             <div className="w-full max-w-2xl mx-auto bg-card border border-green-500/30 rounded-3xl p-10 shadow-2xl text-center my-10 animate-in fade-in zoom-in duration-500">
@@ -265,7 +255,6 @@ export default function OrderForm() {
             <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={step}>
 
-                    {/* --- PASUL 1: PACHET & DATE COPIL --- */}
                     {step === 1 && (
                         <motion.div
                             key="step1"
@@ -277,7 +266,6 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            {/* SELECȚIE PACHET */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div
                                     onClick={() => handlePackageSelect('standard')}
@@ -437,7 +425,6 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-                    {/* --- PASUL 2: MEDIA --- */}
                     {step === 2 && (
                         <motion.div
                             key="step2"
@@ -514,7 +501,6 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-                    {/* --- PASUL 3: FACTURARE & CONTACT --- */}
                     {step === 3 && (
                         <motion.div
                             key="step3"
@@ -526,7 +512,6 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-                            {/* Rezumat Comandă */}
                             <div className={`border rounded-xl p-4 flex justify-between items-center ${formData.package === 'premium' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-blue-500/10 border-blue-500/20'}`}>
                                 <div>
                                     <p className="text-xs text-muted-foreground uppercase font-bold">Total de plată</p>
@@ -546,7 +531,6 @@ export default function OrderForm() {
                                 </div>
                             </div>
 
-                            {/* Contact Info */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">Email (unde trimitem video) *</label>
@@ -579,7 +563,6 @@ export default function OrderForm() {
 
                             <hr className="border-border/50" />
 
-                            {/* Toggle Persoana Juridica */}
                             <div className="flex items-center gap-2">
                                 <input
                                     type="checkbox"
@@ -594,7 +577,6 @@ export default function OrderForm() {
                                 </label>
                             </div>
 
-                            {/* Billing Fields */}
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">
@@ -655,7 +637,6 @@ export default function OrderForm() {
                                     </div>
                                 </div>
 
-                                {/* Fields only for Company */}
                                 {formData.is_company && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                                         <div className="space-y-2">
@@ -686,7 +667,6 @@ export default function OrderForm() {
 
                             <hr className="border-border/50" />
 
-                            {/* --- CHECKBOX TERMENI SI CONDITII --- */}
                             <div className="flex items-start gap-3 bg-muted/30 p-3 rounded-lg border border-border/50">
                                 <input
                                     type="checkbox"

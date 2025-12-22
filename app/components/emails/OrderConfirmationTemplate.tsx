@@ -31,12 +31,10 @@ export const OrderConfirmationTemplate = ({
             <Preview>🎅 Ho Ho Ho! Comanda pentru {childName} a ajuns la Polul Nord!</Preview>
             <Body style={main}>
                 <Container style={container}>
-                    {/* --- HEADER --- */}
                     <Section style={header}>
                         <Heading style={headerTitle}>Biroul Moșului 🎄</Heading>
                     </Section>
 
-                    {/* --- CONȚINUT PRINCIPAL --- */}
                     <Section style={content}>
                         <Heading style={h1}>Salutare, părinte a lui {childName}!</Heading>
                         <Text style={text}>
@@ -44,7 +42,6 @@ export const OrderConfirmationTemplate = ({
                             Moșul își curăță ochelarii și se pregătește să înregistreze mesajul.
                         </Text>
 
-                        {/* --- DETALII COMANDĂ --- */}
                         <Section style={orderBox}>
                             <Text style={orderHeader}>DETALII COMANDĂ</Text>
                             <Hr style={orderHr} />
@@ -69,7 +66,6 @@ export const OrderConfirmationTemplate = ({
                             </Section>
                         </Section>
 
-                        {/* --- CE URMEAZĂ --- */}
                         <Section style={stepsBox}>
                             <Heading as="h3" style={h3}>Ce se întâmplă acum?</Heading>
                             <Text style={stepText}>1. 🎥 Echipa noastră editează videoclipul.</Text>
@@ -88,7 +84,6 @@ export const OrderConfirmationTemplate = ({
                         </Section>
                     </Section>
 
-                    {/* --- FOOTER --- */}
                     <Section style={footer}>
                         <Text style={footerText}>
                             Acest email a fost trimis automat din atelierul lui Moș Crăciun.<br />
@@ -106,8 +101,6 @@ export const OrderConfirmationTemplate = ({
 
 export default OrderConfirmationTemplate;
 
-// --- STILURI ---
-
 const main = {
     backgroundColor: '#f3f4f6',
     fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
@@ -123,7 +116,7 @@ const container = {
 };
 
 const header = {
-    backgroundColor: '#dc2626', // Roșu de Crăciun
+    backgroundColor: '#dc2626',
     padding: '30px 20px',
     textAlign: 'center' as const,
 };
@@ -161,7 +154,6 @@ const text = {
     margin: '0 0 20px',
 };
 
-// Cutia cu detalii (Receipt style)
 const orderBox = {
     backgroundColor: '#f9fafb',
     border: '1px solid #e5e7eb',
@@ -201,12 +193,11 @@ const columnRight = {
     color: '#111827',
     margin: 0,
     textAlign: 'right' as const,
-    float: 'right' as const, // Pentru compatibilitate email vechi
+    float: 'right' as const,
 };
 
-// Cutia cu pași
 const stepsBox = {
-    backgroundColor: '#fffbeb', // Amber foarte deschis
+    backgroundColor: '#fffbeb',
     border: '1px solid #fcd34d',
     borderRadius: '8px',
     padding: '20px',
@@ -214,7 +205,7 @@ const stepsBox = {
 };
 
 const stepText = {
-    color: '#92400e', // Amber închis
+    color: '#92400e',
     fontSize: '15px',
     margin: '5px 0',
 };

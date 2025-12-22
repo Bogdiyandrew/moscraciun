@@ -15,7 +15,6 @@ import {
     Clock
 } from 'lucide-react';
 
-// Definim tipul pentru Order ca sa avem autocomplete si sa nu avem erori
 type Order = {
     id: number;
     created_at: string;
@@ -107,12 +106,10 @@ export default function AdminDashboard() {
                                         }
                                     `}
                                 >
-                                    {/* --- HEADER CARD: Pachet & Status --- */}
                                     <div className={`px-6 py-4 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4
                                         ${isCompleted ? 'bg-green-950/20 border-green-900/30' : 'bg-zinc-800/50 border-zinc-700'}`}>
 
                                         <div className="flex items-center gap-3">
-                                            {/* Badge Pachet */}
                                             <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold border
                                                 ${isPremium
                                                     ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
@@ -122,7 +119,6 @@ export default function AdminDashboard() {
                                                 {isPremium ? 'PREMIUM (Agent)' : 'STANDARD (Scut)'}
                                             </div>
 
-                                            {/* Preț */}
                                             <span className="text-white font-mono font-bold bg-zinc-950 px-2 py-1 rounded border border-zinc-800">
                                                 {order.amount} RON
                                             </span>
@@ -144,8 +140,6 @@ export default function AdminDashboard() {
                                     </div>
 
                                     <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                                        {/* --- COLOANA 1: Despre Copil (Brief Creativ) --- */}
                                         <div className="lg:col-span-2 space-y-6">
                                             <div>
                                                 <h2 className="text-2xl font-bold text-white flex items-center gap-2 mb-1">
@@ -174,7 +168,6 @@ export default function AdminDashboard() {
                                                 </div>
                                             </div>
 
-                                            {/* Note Speciale */}
                                             {order.notes && (
                                                 <div className="bg-zinc-800/30 border border-zinc-700 p-3 rounded-lg flex gap-3">
                                                     <FileText className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
@@ -185,7 +178,6 @@ export default function AdminDashboard() {
                                                 </div>
                                             )}
 
-                                            {/* Galerie Foto */}
                                             {order.images && order.images.length > 0 ? (
                                                 <div className="border-t border-zinc-800 pt-4">
                                                     <strong className="text-zinc-400 text-xs uppercase flex items-center gap-2 mb-3">
@@ -219,14 +211,12 @@ export default function AdminDashboard() {
                                             )}
                                         </div>
 
-                                        {/* --- COLOANA 2: Client & Facturare (Partea Administrativă) --- */}
                                         <div className="bg-zinc-950 rounded-xl border border-zinc-800 p-5 h-fit">
                                             <h3 className="text-zinc-400 text-xs font-bold uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2">
                                                 Date Client & Facturare
                                             </h3>
 
                                             <div className="space-y-4">
-                                                {/* Contact */}
                                                 <div>
                                                     <div className="flex items-center gap-2 text-white mb-1">
                                                         <User className="w-4 h-4 text-primary" />
@@ -236,7 +226,6 @@ export default function AdminDashboard() {
                                                     {order.phone && <p className="text-sm text-zinc-400 ml-6">{order.phone}</p>}
                                                 </div>
 
-                                                {/* Facturare */}
                                                 <div className="pt-2">
                                                     <div className="flex items-center gap-2 text-white mb-2">
                                                         {order.is_company ? (
@@ -264,7 +253,6 @@ export default function AdminDashboard() {
                                                     </div>
                                                 </div>
 
-                                                {/* Actions */}
                                                 {!isCompleted && (
                                                     <div className="pt-6 mt-4 border-t border-zinc-800">
                                                         <button

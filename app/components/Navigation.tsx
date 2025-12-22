@@ -8,12 +8,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-// Definim tipul pentru elementele de meniu pentru claritate
 type NavItem = {
     name: string;
     icon: React.ReactNode;
-    id?: string;   // Folosit pentru scroll (ex: #hero)
-    path?: string; // Folosit pentru pagini separate (ex: /contact)
+    id?: string;
+    path?: string;
 };
 
 export default function Navigation() {
@@ -27,7 +26,6 @@ export default function Navigation() {
         setMounted(true);
     }, []);
 
-    // Blocare scroll când meniul este deschis
     useEffect(() => {
         if (mobileMenuOpen) {
             document.body.style.overflow = 'hidden';
@@ -39,36 +37,29 @@ export default function Navigation() {
         };
     }, [mobileMenuOpen]);
 
-    // 1. Aici am modificat structura. Unele au ID, Contact are PATH.
     const navItems: NavItem[] = [
         { name: 'Acasă', id: 'hero', icon: <Home className="w-5 h-5" /> },
         { name: 'Cum funcționează', id: 'despre', icon: <BookOpen className="w-5 h-5" /> },
         { name: 'Poveste', id: 'povesti', icon: <Gift className="w-5 h-5" /> },
         { name: 'Întrebări', id: 'faq', icon: <HelpCircle className="w-5 h-5" /> },
         { name: 'Formular', id: 'comanda', icon: <Form className="w-5 h-5" /> },
-        // Aici este modificarea specifică pentru Contact
         { name: 'Contact', path: '/contact', icon: <Send className="w-5 h-5" /> },
     ];
 
-    // 2. Funcție nouă care gestionează atât scroll-ul cât și rutarea
     const handleNavigation = (item: NavItem) => {
         setMobileMenuOpen(false);
 
-        // Dacă elementul are un path (ex: /contact), navigăm către acea pagină
         if (item.path) {
             router.push(item.path);
             return;
         }
 
-        // Dacă elementul are un ID, facem logica de scroll
         if (item.id) {
             if (pathname !== '/') {
-                // Dacă nu suntem pe Home, mergem pe Home la secțiunea respectivă
                 router.push(`/#${item.id}`);
                 return;
             }
 
-            // Logica de scroll dacă suntem deja pe Home
             const element = document.getElementById(item.id);
             if (element) {
                 setTimeout(() => {
@@ -105,7 +96,6 @@ export default function Navigation() {
 
     return (
         <>
-            {/* --- DESKTOP SIDEBAR --- */}
             <motion.aside
                 initial="hidden"
                 animate="visible"
@@ -139,11 +129,11 @@ export default function Navigation() {
                 <nav className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto relative z-10">
                     {navItems.map((item) => (
                         <motion.button
-                            key={item.name} // Folosim name ca cheie unică
+                            key={item.name}
                             variants={itemVariants}
                             whileHover={{ scale: 1.02, x: 5, backgroundColor: "rgba(var(--primary), 0.1)" }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => handleNavigation(item)} // Apelăm funcția nouă
+                            onClick={() => handleNavigation(item)}
                             className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-primary transition-all text-sm font-medium group relative overflow-hidden cursor-pointer"
                         >
                             <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center rounded-full" />
@@ -176,7 +166,6 @@ export default function Navigation() {
                         )}
                     </div>
 
-                    {/* Butonul de Comandă rămâne pe scroll către secțiune */}
                     <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
@@ -194,8 +183,6 @@ export default function Navigation() {
                     </motion.button>
                 </motion.div>
             </motion.aside>
-
-            {/* --- MOBILE HEADER --- */}
             <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-lg border-b border-border/50 transition-colors duration-300">
                 <div className="px-4 h-16 flex items-center justify-between">
                     <div onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
@@ -237,12 +224,10 @@ export default function Navigation() {
                 </div>
             </header>
 
-            {/* --- MOBILE MENU PORTAL --- */}
             {mounted && createPortal(
                 <AnimatePresence mode="wait">
                     {mobileMenuOpen && (
                         <>
-                            {/* Backdrop */}
                             <motion.div
                                 key="mobile-backdrop"
                                 initial={{ opacity: 0 }}
@@ -254,7 +239,6 @@ export default function Navigation() {
                                 style={{ zIndex: 9998 }}
                             />
 
-                            {/* Sidebar Meniu */}
                             <motion.div
                                 key="mobile-menu"
                                 initial={{ x: '100%' }}
@@ -281,7 +265,7 @@ export default function Navigation() {
                                             initial={{ opacity: 0, x: 20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.1 + index * 0.1 }}
-                                            onClick={() => handleNavigation(item)} // Apelăm funcția nouă
+                                            onClick={() => handleNavigation(item)}
                                             className="flex items-center gap-3 px-4 py-4 rounded-xl text-foreground hover:bg-muted active:scale-95 transition-all text-left font-medium cursor-pointer"
                                         >
                                             <span className="text-primary bg-primary/10 p-2 rounded-lg">{item.icon}</span>

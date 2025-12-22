@@ -1,13 +1,12 @@
 import { OrderConfirmationTemplate } from '@/app/components/emails/OrderConfirmationTemplate';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { render } from '@react-email/render'; // Importăm funcția de randare
+import { render } from '@react-email/render';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
     try {
-        // 1. Verificări preliminare
         if (!process.env.RESEND_API_KEY) {
             return NextResponse.json({ error: "Missing API Key" }, { status: 500 });
         }
@@ -17,7 +16,6 @@ export async function POST(request: Request) {
 
         console.log(`📨 Pregătesc email pentru: ${email}`);
 
-        // 2. AICI ESTE FIX-UL: Transformăm React în HTML manual
         const emailHtml = await render(
             OrderConfirmationTemplate({
                 childName,
@@ -26,12 +24,11 @@ export async function POST(request: Request) {
             })
         );
 
-        // 3. Trimitem emailul ca HTML simplu
         const { data, error } = await resend.emails.send({
             from: 'Biroul Mosului <contact@biroulmosului.ro>',
             to: [email],
             subject: `Comandă confirmată pentru ${childName}! 🎅`,
-            html: emailHtml, // Folosim 'html' în loc de 'react'
+            html: emailHtml,
         });
 
         if (error) {
