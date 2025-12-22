@@ -56,7 +56,7 @@ export default function Hero() {
 
                 <div className="relative w-full h-full block md:hidden dark:hidden">
                     <Image
-                        src="/hero/hero-light-mobile.webp"
+                        src="/hero/herobackph.webp"
                         alt="Hero Background Light Mobile"
                         fill
                         className="object-cover object-center"
@@ -76,7 +76,7 @@ export default function Hero() {
 
                 <div className="relative w-full h-full hidden dark:block dark:md:hidden">
                     <Image
-                        src="/hero/hero-dark-mobile.webp"
+                        src="/hero/herobackph.webp"
                         alt="Hero Background Dark Mobile"
                         fill
                         className="object-cover object-center"
