@@ -4,35 +4,16 @@ import React, { useState } from 'react';
 import { supabase } from '@/utils/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    User,
-    Sparkles,
-    ThumbsUp,
-    ThumbsDown,
-    Mail,
-    Phone,
-    ArrowRight,
-    ArrowLeft,
-    CheckCircle,
-    Loader2,
-    Star,
-    Camera,
-    FileText,
-    AlertCircle,
-    X,
-    CreditCard,
-    MapPin,
-    Building2,
-    Shield,
-    Zap,
-    Check
+    User, Sparkles, ThumbsUp, ThumbsDown, Mail, Phone,
+    ArrowRight, ArrowLeft, CheckCircle, Loader2, Star,
+    Camera, FileText, AlertCircle, X, CreditCard,
+    MapPin, Building2, Shield, Zap
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
+// ... (Restul tipurilor FormData rămân la fel) ...
 type FormData = {
-
     package: 'standard' | 'premium';
-
-
     child_name: string;
     age: string;
     gender: 'boy' | 'girl';
@@ -40,12 +21,8 @@ type FormData = {
     bad_deed: string;
     secret_detail: string;
     wish: string;
-
-
     notes: string;
     images: string[];
-
-
     parent_email: string;
     phone: string;
     billing_name: string;
@@ -55,6 +32,7 @@ type FormData = {
     is_company: boolean;
     company_cui?: string;
     company_reg_com?: string;
+    terms_accepted: boolean;
 };
 
 const initialData: FormData = {
@@ -77,25 +55,27 @@ const initialData: FormData = {
     is_company: false,
     company_cui: '',
     company_reg_com: '',
+    terms_accepted: false,
 };
 
 export default function OrderForm() {
     const [step, setStep] = useState<number>(1);
     const [formData, setFormData] = useState<FormData>(initialData);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // !!! REINTRODUCEM STAREA DE SUCCES PENTRU MODUL FĂRĂ PLATĂ !!!
     const [isSuccess, setIsSuccess] = useState(false);
+
     const [validationError, setValidationError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
-
         if (type === 'checkbox') {
             const checked = (e.target as HTMLInputElement).checked;
             setFormData(prev => ({ ...prev, [name]: checked }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
-
         if (validationError) setValidationError(null);
     };
 
@@ -123,34 +103,45 @@ export default function OrderForm() {
         return `${(step / 3) * 100}%`;
     };
 
+    // --- FUNCȚIA DE SUBMIT MODIFICATĂ (FĂRĂ STRIPE) ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validări
         if (!formData.parent_email || !formData.billing_name || !formData.billing_address || !formData.billing_city) {
             setValidationError("Te rugăm să completezi toate datele de facturare obligatorii!");
             return;
         }
-
         if (formData.is_company && !formData.company_cui) {
             setValidationError("Pentru firme, CUI-ul este obligatoriu!");
+            return;
+        }
+        if (!formData.terms_accepted) {
+            setValidationError("Trebuie să fii de acord cu Termenii și Condițiile!");
             return;
         }
 
         setIsSubmitting(true);
 
         try {
+            // 1. DOAR SALVĂM ÎN BAZA DE DATE
             const { error } = await supabase
                 .from('orders')
                 .insert([{
                     ...formData,
-                    status: 'pending_payment',
-                    amount: formData.package === 'premium' ? 89 : 49, // Salvăm și suma
+                    status: 'pending_payment', // Rămâne pending, dar apare în admin
+                    amount: formData.package === 'premium' ? 89 : 49,
                     created_at: new Date().toISOString()
                 }]);
 
             if (error) throw error;
 
+            // 2. NU MAI CHEMARE API STRIPE -> AFIȘĂM SUCCES LOCAL
             setIsSuccess(true);
+
+            // Opțional: Resetăm formularul sau scroll sus
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
         } catch (error: any) {
             console.error('Eroare Supabase:', error);
             setValidationError('Eroare la salvare: ' + error.message);
@@ -165,27 +156,33 @@ export default function OrderForm() {
         exit: (direction: number) => ({ x: direction < 0 ? 50 : -50, opacity: 0 }),
     };
 
+    // --- UI PENTRU SUCCES (AFISAT DUPĂ TRIMITERE) ---
     if (isSuccess) {
         return (
-            <div id="comanda" className="w-full max-w-2xl mx-auto bg-card border border-green-500/30 rounded-3xl p-10 shadow-2xl text-center my-10">
+            <div className="w-full max-w-2xl mx-auto bg-card border border-green-500/30 rounded-3xl p-10 shadow-2xl text-center my-10 animate-in fade-in zoom-in duration-500">
                 <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Star className="w-10 h-10 text-green-500 fill-green-500 animate-pulse" />
                 </div>
-                <h2 className="text-3xl font-bold text-foreground mb-4">Comandă Inițiată!</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-4">Comandă Înregistrată!</h2>
                 <p className="text-muted-foreground mb-8">
-                    Pachetul <strong>{formData.package === 'premium' ? 'AGENT SECRET' : 'SCUTUL MAGIC'}</strong> pentru <strong>{formData.child_name}</strong> a fost salvat.
+                    Pachetul <strong>{formData.package === 'premium' ? 'AGENT SECRET' : 'SCUTUL MAGIC'}</strong> pentru <strong>{formData.child_name}</strong> a fost salvat cu succes.
                     <br /><br />
-                    Total de plată: <span className="text-foreground font-bold">{formData.package === 'premium' ? '89 RON' : '49 RON'}</span>
+                    Deoarece suntem în modul de testare, plata nu a fost cerută.
+                    <br />
+                    Verifică pagina de <strong>Admin</strong> pentru a vedea comanda!
                 </p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="text-primary font-bold hover:underline"
+                    className="bg-primary text-primary-foreground font-bold py-3 px-8 rounded-xl hover:opacity-90 transition-opacity"
                 >
                     Mai fă o comandă
                 </button>
             </div>
         );
     }
+
+    // ... (Restul return-ului cu formularul rămâne neschimbat, doar handleSubmit-ul de mai sus se schimbă) ...
+    // Asigură-te că pui tot conținutul de la <section> ... </section> aici.
 
     return (
         <section
@@ -255,8 +252,11 @@ export default function OrderForm() {
 
             <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={step}>
+                    {/* ... AICI VINE CONȚINUTUL PASILOR 1, 2, 3 
+                        (Este identic cu codul anterior, nu trebuie să schimbi nimic în interiorul <form> decât dacă lipsește ceva)
+                     */}
 
-
+                    {/* --- PASUL 1: PACHET & DATE COPIL --- */}
                     {step === 1 && (
                         <motion.div
                             key="step1"
@@ -268,7 +268,7 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-
+                            {/* SELECȚIE PACHET */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div
                                     onClick={() => handlePackageSelect('standard')}
@@ -428,7 +428,7 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-
+                    {/* --- PASUL 2: MEDIA --- */}
                     {step === 2 && (
                         <motion.div
                             key="step2"
@@ -440,7 +440,7 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-
+                            {/* Mesaj condiționat în funcție de pachet */}
                             {formData.package === 'premium' ? (
                                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3">
                                     <Camera className="w-6 h-6 text-amber-500 mt-1 shrink-0" />
@@ -468,8 +468,6 @@ export default function OrderForm() {
                                     </div>
                                 </div>
                             )}
-
-
 
                             {formData.package === 'premium' && (
                                 <ImageUpload onUploadComplete={(urls) => setFormData(prev => ({ ...prev, images: urls }))} />
@@ -508,7 +506,7 @@ export default function OrderForm() {
                         </motion.div>
                     )}
 
-
+                    {/* --- PASUL 3: FACTURARE & CONTACT --- */}
                     {step === 3 && (
                         <motion.div
                             key="step3"
@@ -520,7 +518,7 @@ export default function OrderForm() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6"
                         >
-
+                            {/* Rezumat Comandă */}
                             <div className={`border rounded-xl p-4 flex justify-between items-center ${formData.package === 'premium' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-blue-500/10 border-blue-500/20'}`}>
                                 <div>
                                     <p className="text-xs text-muted-foreground uppercase font-bold">Total de plată</p>
@@ -540,7 +538,7 @@ export default function OrderForm() {
                                 </div>
                             </div>
 
-
+                            {/* Contact Info */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">Email (unde trimitem video) *</label>
@@ -573,7 +571,7 @@ export default function OrderForm() {
 
                             <hr className="border-border/50" />
 
-
+                            {/* Toggle Persoana Juridica */}
                             <div className="flex items-center gap-2">
                                 <input
                                     type="checkbox"
@@ -581,14 +579,14 @@ export default function OrderForm() {
                                     name="is_company"
                                     checked={formData.is_company}
                                     onChange={handleChange}
-                                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                                 />
                                 <label htmlFor="is_company" className="text-sm font-medium text-foreground cursor-pointer select-none">
                                     Factură pe Firmă (Persoană Juridică)
                                 </label>
                             </div>
 
-
+                            {/* Billing Fields */}
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted-foreground ml-1">
@@ -649,7 +647,7 @@ export default function OrderForm() {
                                     </div>
                                 </div>
 
-
+                                {/* Fields only for Company */}
                                 {formData.is_company && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                                         <div className="space-y-2">
@@ -678,6 +676,23 @@ export default function OrderForm() {
                                 )}
                             </div>
 
+                            <hr className="border-border/50" />
+
+                            {/* --- CHECKBOX TERMENI SI CONDITII --- */}
+                            <div className="flex items-start gap-3 bg-muted/30 p-3 rounded-lg border border-border/50">
+                                <input
+                                    type="checkbox"
+                                    id="terms_accepted"
+                                    name="terms_accepted"
+                                    checked={formData.terms_accepted}
+                                    onChange={handleChange}
+                                    className="mt-1 w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                                />
+                                <label htmlFor="terms_accepted" className="text-sm text-muted-foreground cursor-pointer select-none leading-tight">
+                                    Am citit și sunt de acord cu <a href="/termeni" target="_blank" className="text-primary hover:underline font-semibold">Termenii și Condițiile</a> și cu <a href="/confidentialitate" target="_blank" className="text-primary hover:underline font-semibold">Politica de Confidențialitate</a>.
+                                </label>
+                            </div>
+
                             <div className="pt-4 flex flex-col-reverse md:flex-row gap-3">
                                 <button
                                     type="button"
@@ -695,11 +710,11 @@ export default function OrderForm() {
                                 >
                                     {isSubmitting ? (
                                         <>
-                                            <Loader2 className="w-5 h-5 animate-spin" /> Procesare...
+                                            <Loader2 className="w-5 h-5 animate-spin" /> Se salvează...
                                         </>
                                     ) : (
                                         <>
-                                            Plătește {formData.package === 'premium' ? '89' : '49'} RON <CheckCircle className="w-5 h-5" />
+                                            Trimite Comanda (Test) <CheckCircle className="w-5 h-5" />
                                         </>
                                     )}
                                 </button>

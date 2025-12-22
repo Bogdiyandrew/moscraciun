@@ -2,7 +2,7 @@
 
 import { Heart, Facebook, Instagram, Mail, Snowflake } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image'; // Import necesar pentru SVG
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 export default function Footer() {
@@ -44,7 +44,6 @@ export default function Footer() {
 
                         <div className="col-span-1 md:col-span-2 space-y-6">
                             <Link href="/" className="flex items-center gap-2 group w-fit">
-                                {/* Logo modificat aici */}
                                 <div className="bg-primary p-2.5 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300 flex items-center justify-center">
                                     <Image
                                         src="/biroulmosului.svg"
@@ -88,6 +87,8 @@ export default function Footer() {
                             <h3 className="font-bold text-foreground mb-6">Suport & Legal</h3>
                             <ul className="space-y-3 text-sm">
                                 <li><FooterLink href="/termeni">Termeni și Condiții</FooterLink></li>
+                                {/* AICI AM ADĂUGAT LINK-UL DE COOKIES */}
+                                <li><FooterLink href="/cookies">Politica Cookies</FooterLink></li>
                                 <li><FooterLink href="/confidentialitate">Politica GDPR</FooterLink></li>
                                 <li className="pt-4">
                                     <a href="mailto:contact@biroulmosului.ro" className="flex items-center gap-2 text-foreground font-medium hover:text-primary transition-colors">

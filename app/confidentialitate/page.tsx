@@ -12,7 +12,7 @@ export default function ConfidentialitatePage() {
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold text-white">1. Ce date colectăm?</h2>
                     <ul className="list-disc pl-5 space-y-2 marker:text-primary">
-                        <li><strong>Date părinte:</strong> Adresa de email (pentru livrare), date facturare (dacă e cazul). Nu stocăm datele cardului bancar (acestea sunt procesate exclusiv de Stripe).</li>
+                        <li><strong>Date părinte:</strong> Adresa de email (pentru livrare), date facturare. Nu stocăm datele cardului bancar (acestea sunt procesate exclusiv de Stripe).</li>
                         <li><strong>Date copil:</strong> Prenume, vârstă, oraș, realizări, fotografii încărcate.</li>
                     </ul>
                 </section>

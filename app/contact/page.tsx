@@ -32,7 +32,7 @@ export default function ContactPage() {
                                     <Mail className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-white">Email (Suport Clienți)</h4>
+                                    <h4 className="font-bold text-white">Email (suport clienți)</h4>
                                     <p className="text-zinc-400 text-sm mb-1">Răspundem în aprox. 2-4 ore.</p>
                                     <a href="mailto:contact@biroulmosului.ro" className="text-primary hover:text-red-400 transition-colors">
                                         contact@biroulmosului.ro
@@ -45,7 +45,7 @@ export default function ContactPage() {
                                     <Clock className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-white">Program de Lucru</h4>
+                                    <h4 className="font-bold text-white">Program de lucru</h4>
                                     <p className="text-zinc-400 text-sm">Luni - Duminică: 09:00 - 22:00</p>
                                     <p className="text-zinc-500 text-xs mt-1">*În Ajun lucrăm non-stop!</p>
                                 </div>
@@ -56,9 +56,9 @@ export default function ContactPage() {
                                     <MapPin className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-white">Date Fiscale</h4>
-                                    <p className="text-zinc-400 text-sm">SC CODE COMMERCE HUB SRL</p>
-                                    <p className="text-zinc-400 text-sm">CUI: 51161206</p>
+                                    <h4 className="font-bold text-white">Date fiscale</h4>
+                                    <p className="text-zinc-400 text-sm">SC VOLTARISS SRL</p>
+                                    <p className="text-zinc-400 text-sm">CUI : 52840230</p>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,7 @@ export default function ContactPage() {
                             </div>
 
                             <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:scale-[1.02]">
-                                Trimite Mesajul <Send className="w-5 h-5" />
+                                Trimite mesajul
                             </button>
                         </form>
                     </motion.div>

@@ -1,13 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-// 1. Importăm createPortal
 import { createPortal } from 'react-dom';
 import { Menu, X, Gift, Sun, Moon, Home, HelpCircle, Form, BookOpen, Send, Sparkles, SendHorizontal } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
+
+// Definim tipul pentru elementele de meniu pentru claritate
+type NavItem = {
+    name: string;
+    icon: React.ReactNode;
+    id?: string;   // Folosit pentru scroll (ex: #hero)
+    path?: string; // Folosit pentru pagini separate (ex: /contact)
+};
 
 export default function Navigation() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -32,18 +39,42 @@ export default function Navigation() {
         };
     }, [mobileMenuOpen]);
 
-    const scrollToSection = (id: string) => {
+    // 1. Aici am modificat structura. Unele au ID, Contact are PATH.
+    const navItems: NavItem[] = [
+        { name: 'Acasă', id: 'hero', icon: <Home className="w-5 h-5" /> },
+        { name: 'Cum funcționează', id: 'despre', icon: <BookOpen className="w-5 h-5" /> },
+        { name: 'Poveste', id: 'povesti', icon: <Gift className="w-5 h-5" /> },
+        { name: 'Întrebări', id: 'faq', icon: <HelpCircle className="w-5 h-5" /> },
+        { name: 'Formular', id: 'comanda', icon: <Form className="w-5 h-5" /> },
+        // Aici este modificarea specifică pentru Contact
+        { name: 'Contact', path: '/contact', icon: <Send className="w-5 h-5" /> },
+    ];
+
+    // 2. Funcție nouă care gestionează atât scroll-ul cât și rutarea
+    const handleNavigation = (item: NavItem) => {
         setMobileMenuOpen(false);
-        if (pathname !== '/') {
-            router.push(`/#${id}`);
+
+        // Dacă elementul are un path (ex: /contact), navigăm către acea pagină
+        if (item.path) {
+            router.push(item.path);
             return;
         }
-        const element = document.getElementById(id);
-        if (element) {
-            // Mic delay pentru a permite închiderea meniului înainte de scroll
-            setTimeout(() => {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+
+        // Dacă elementul are un ID, facem logica de scroll
+        if (item.id) {
+            if (pathname !== '/') {
+                // Dacă nu suntem pe Home, mergem pe Home la secțiunea respectivă
+                router.push(`/#${item.id}`);
+                return;
+            }
+
+            // Logica de scroll dacă suntem deja pe Home
+            const element = document.getElementById(item.id);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
         }
     };
 
@@ -54,14 +85,6 @@ export default function Navigation() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
-
-    const navItems = [
-        { name: 'Acasă', id: 'hero', icon: <Home className="w-5 h-5" /> },
-        { name: 'Cum funcționează', id: 'despre', icon: <BookOpen className="w-5 h-5" /> },
-        { name: 'Poveste', id: 'povesti', icon: <Gift className="w-5 h-5" /> },
-        { name: 'Întrebări', id: 'faq', icon: <HelpCircle className="w-5 h-5" /> },
-        { name: 'Formular', id: 'comanda', icon: <Form className="w-5 h-5" /> },
-    ];
 
     const sidebarVariants = {
         hidden: { opacity: 0, x: -20 },
@@ -89,7 +112,6 @@ export default function Navigation() {
                 variants={sidebarVariants}
                 className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 z-50 bg-card/80 dark:bg-card/40 backdrop-blur-xl border-r border-border h-screen transition-colors duration-300 shadow-2xl"
             >
-                {/* ... (Conținutul Desktop Sidebar a rămas neschimbat) ... */}
                 <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-primary/5 to-transparent pointer-events-none" />
 
                 <div className="p-6 border-b border-border/50 flex items-center gap-3 relative z-10">
@@ -117,11 +139,11 @@ export default function Navigation() {
                 <nav className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto relative z-10">
                     {navItems.map((item) => (
                         <motion.button
-                            key={item.id}
+                            key={item.name} // Folosim name ca cheie unică
                             variants={itemVariants}
                             whileHover={{ scale: 1.02, x: 5, backgroundColor: "rgba(var(--primary), 0.1)" }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => scrollToSection(item.id)}
+                            onClick={() => handleNavigation(item)} // Apelăm funcția nouă
                             className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-primary transition-all text-sm font-medium group relative overflow-hidden cursor-pointer"
                         >
                             <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center rounded-full" />
@@ -154,10 +176,11 @@ export default function Navigation() {
                         )}
                     </div>
 
+                    {/* Butonul de Comandă rămâne pe scroll către secțiune */}
                     <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={() => scrollToSection('comanda')}
+                        onClick={() => handleNavigation({ name: 'Formular', id: 'comanda', icon: null })}
                         className="
                             w-full flex items-center justify-center gap-2 
                             bg-linear-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400
@@ -214,10 +237,7 @@ export default function Navigation() {
                 </div>
             </header>
 
-            {/* --- MODIFICAREA CRITICĂ AICI --- 
-               Folosim createPortal pentru a muta meniul la finalul <body>
-               astfel încât să nu fie afectat de GSAP transforms.
-            */}
+            {/* --- MOBILE MENU PORTAL --- */}
             {mounted && createPortal(
                 <AnimatePresence mode="wait">
                     {mobileMenuOpen && (
@@ -231,7 +251,7 @@ export default function Navigation() {
                                 transition={{ duration: 0.3 }}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden cursor-pointer"
-                                style={{ zIndex: 9998 }} // Z-index mare
+                                style={{ zIndex: 9998 }}
                             />
 
                             {/* Sidebar Meniu */}
@@ -242,7 +262,7 @@ export default function Navigation() {
                                 exit={{ x: '100%' }}
                                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                                 className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border shadow-2xl flex flex-col overflow-y-auto md:hidden"
-                                style={{ zIndex: 9999 }} // Z-index foarte mare
+                                style={{ zIndex: 9999 }}
                             >
                                 <div className="p-4 flex items-center justify-between border-b border-border">
                                     <span className="font-bold text-lg">Meniu</span>
@@ -257,11 +277,11 @@ export default function Navigation() {
                                 <div className="p-4 flex flex-col gap-2">
                                     {navItems.map((item, index) => (
                                         <motion.button
-                                            key={item.id}
+                                            key={item.name}
                                             initial={{ opacity: 0, x: 20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.1 + index * 0.1 }}
-                                            onClick={() => scrollToSection(item.id)}
+                                            onClick={() => handleNavigation(item)} // Apelăm funcția nouă
                                             className="flex items-center gap-3 px-4 py-4 rounded-xl text-foreground hover:bg-muted active:scale-95 transition-all text-left font-medium cursor-pointer"
                                         >
                                             <span className="text-primary bg-primary/10 p-2 rounded-lg">{item.icon}</span>
@@ -273,7 +293,7 @@ export default function Navigation() {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4 }}
-                                        onClick={() => scrollToSection('comanda')}
+                                        onClick={() => handleNavigation({ name: 'Formular', id: 'comanda', icon: null })}
                                         whileTap={{ scale: 0.95 }}
                                         className="bg-primary text-white py-4 rounded-xl font-bold text-center mt-2 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 cursor-pointer"
                                     >
@@ -284,7 +304,7 @@ export default function Navigation() {
                         </>
                     )}
                 </AnimatePresence>,
-                document.body // Ținta portalului
+                document.body
             )}
         </>
     );
