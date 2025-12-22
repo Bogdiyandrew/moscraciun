@@ -17,7 +17,7 @@ const HeroSnow = () => {
                 return (
                     <motion.div
                         key={i}
-                        className="absolute rounded-full bg-white/80 dark:bg-white/60 blur-[1px]"
+                        className="absolute rounded-full bg-white/60 dark:bg-white/40 blur-[1px]"
                         style={{
                             left: `${left}%`,
                             width: `${width}px`,
@@ -86,7 +86,7 @@ export default function Hero() {
 
                 <div className="relative w-full h-full hidden dark:md:block">
                     <Image
-                        src="/hero/hero-dark-desktop.webp"
+                        src="/hero/herobackground.webp"
                         alt="Hero Background Dark Desktop"
                         fill
                         className="object-cover object-center"
@@ -142,10 +142,10 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                    className="text-lg md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-medium"
+                    className="text-lg md:text-2xl text-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-medium"
                 >
                     Moș Crăciun înregistrează un mesaj video unic pentru copilul tău.
-                    Fără roboți, doar <span className="font-semibold text-foreground">emoție pură</span>.
+                    Fără roboți, doar <span className="font-semibold text-red-600 dark:text-red-500">emoție pură</span>.
                 </motion.p>
 
                 <motion.div
