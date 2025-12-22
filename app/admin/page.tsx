@@ -257,7 +257,7 @@ export default function AdminDashboard() {
                                                     <div className="pt-6 mt-4 border-t border-zinc-800">
                                                         <button
                                                             onClick={() => markAsDone(order.id)}
-                                                            className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-green-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                                            className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-green-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                                                         >
                                                             <CheckCircle className="w-5 h-5" />
                                                             Marchează Finalizat
