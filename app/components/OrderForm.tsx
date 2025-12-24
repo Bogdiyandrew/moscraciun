@@ -61,7 +61,6 @@ export default function OrderForm() {
     const [step, setStep] = useState<number>(1);
     const [formData, setFormData] = useState<FormData>(initialData);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -99,9 +98,11 @@ export default function OrderForm() {
         return `${(step / 3) * 100}%`;
     };
 
+    // --- LOGICA NOUĂ PENTRU STRIPE ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // 1. Validări
         if (!formData.parent_email || !formData.billing_name || !formData.billing_address || !formData.billing_city) {
             setValidationError("Te rugăm să completezi toate datele de facturare obligatorii!");
             return;
@@ -118,73 +119,61 @@ export default function OrderForm() {
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase
+            // 2. Salvăm comanda în Supabase (status: pending_payment)
+            const { data: orderData, error: dbError } = await supabase
                 .from('orders')
                 .insert([{
                     ...formData,
                     status: 'pending_payment',
                     amount: formData.package === 'premium' ? 89 : 49,
                     created_at: new Date().toISOString()
-                }]);
+                }])
+                .select()
+                .single();
 
-            if (error) throw error;
+            if (dbError) throw dbError;
+            if (!orderData) throw new Error("Nu s-a putut crea comanda.");
 
-            try {
-                await fetch('/api/send-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: formData.parent_email,
-                        childName: formData.child_name,
-                        packageName: formData.package === 'premium' ? 'Agent Secret' : 'Scutul Magic',
-                        price: formData.package === 'premium' ? 89 : 49,
-                    }),
-                });
-            } catch (emailError) {
-                console.error("Eroare la trimiterea emailului:", emailError);
+            console.log("Comanda salvată, inițiem Stripe...");
+
+            // 3. Cerem linkul de plată de la API-ul nostru Stripe
+            const response = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    orderId: orderData.id,
+                    packageType: formData.package,
+                    childName: formData.child_name,
+                    parentEmail: formData.parent_email
+                }),
+            });
+
+            const responseData = await response.json();
+
+            if (responseData.error) {
+                throw new Error(responseData.error);
             }
 
-            setIsSuccess(true);
+            // 4. Redirecționăm utilizatorul către Stripe
+            if (responseData.url) {
+                window.location.href = responseData.url;
+            } else {
+                throw new Error("Nu am primit URL de la Stripe.");
+            }
 
         } catch (error: any) {
-            console.error('Eroare Supabase:', error);
-            setValidationError('Eroare la salvare: ' + error.message);
-        } finally {
+            console.error('Eroare procesare:', error);
+            setValidationError('Eroare: ' + (error.message || "A apărut o problemă necunoscută"));
             setIsSubmitting(false);
         }
     };
+    // ---------------------------------
 
     const variants = {
         enter: (direction: number) => ({ x: direction > 0 ? 50 : -50, opacity: 0 }),
         center: { x: 0, opacity: 1 },
         exit: (direction: number) => ({ x: direction < 0 ? 50 : -50, opacity: 0 }),
     };
-
-    if (isSuccess) {
-        return (
-            <div className="w-full max-w-2xl mx-auto bg-card border border-green-500/30 rounded-3xl p-10 shadow-2xl text-center my-10 animate-in fade-in zoom-in duration-500">
-                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Star className="w-10 h-10 text-green-500 fill-green-500 animate-pulse" />
-                </div>
-                <h2 className="text-3xl font-bold text-foreground mb-4">Comandă Înregistrată!</h2>
-                <p className="text-muted-foreground mb-8">
-                    Pachetul <strong>{formData.package === 'premium' ? 'AGENT SECRET' : 'SCUTUL MAGIC'}</strong> pentru <strong>{formData.child_name}</strong> a fost salvat cu succes.
-                    <br /><br />
-                    Un email de confirmare a fost trimis către <strong>{formData.parent_email}</strong>.
-                    <br />
-                    Deoarece suntem în modul de testare, plata nu a fost cerută.
-                </p>
-                <button
-                    onClick={() => window.location.reload()}
-                    className="bg-primary text-primary-foreground font-bold py-3 px-8 rounded-xl hover:opacity-90 transition-opacity"
-                >
-                    Mai fă o comandă
-                </button>
-            </div>
-        );
-    }
 
     return (
         <section
@@ -694,15 +683,15 @@ export default function OrderForm() {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full md:w-2/3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                                    className="w-full md:w-2/3 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-red-600/30 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer group"
                                 >
                                     {isSubmitting ? (
                                         <>
-                                            <Loader2 className="w-5 h-5 animate-spin" /> Se salvează...
+                                            <Loader2 className="w-5 h-5 animate-spin" /> Se inițiază plata...
                                         </>
                                     ) : (
                                         <>
-                                            Trimite comanda (test) <CheckCircle className="w-5 h-5" />
+                                            Plătește și Finalizează <CreditCard className="w-5 h-5 group-hover:scale-110 transition-transform" />
                                         </>
                                     )}
                                 </button>
