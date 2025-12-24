@@ -52,8 +52,8 @@ export async function POST(req: Request) {
             mode: 'payment',
             customer_email: parentEmail,
             // Folosim URL-ul din mediu sau localhost ca fallback
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/succes?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/#comanda`,
+            success_url: `https://biroulmosului.ro/succes?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `https://biroulmosului.ro/#comanda`,
             metadata: {
                 orderId: orderId,
             },
